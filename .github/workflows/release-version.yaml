@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   version:
-    uses: stacc/github-workflow-actions/.github/workflows/version.yaml@v1
+    uses: stacc/github-workflow-actions/.github/workflows/version.yaml@main
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
   updateLatest:
@@ -24,7 +24,6 @@ jobs:
           echo ${{ needs.version.outputs.new_release_published }}
           echo ${{ needs.version.outputs.last_release_version }}
       - name: Copy latest into a simple version branch
-        if: needs.version.outputs.new_release_published == 'true'
         run: |
           git branch -B --force ${{ needs.version.outputs.new_release_major_version }} ${{ github.sha }} && git push origin ${{ needs.version.outputs.new_release_major_version }}
 
