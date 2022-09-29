@@ -19,10 +19,10 @@ jobs:
         with:
           additional_packages: |
             [
-              @semantic-release/changelog,
-              @semantic-release/git,
-              @semantic-release/exec,
-              semantic-release-slack-bot
+              '@semantic-release/changelog',
+              '@semantic-release/git',
+              '@semantic-release/exec',
+              'semantic-release-slack-bot'
             ]
           extends: @stacc/semantic-release-config
           branches: 'main'
