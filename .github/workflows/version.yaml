@@ -32,6 +32,7 @@ on:
       slack-channel: #Slack channel. Look ABOVE this to read how this might work https://github.com/juliuscc/semantic-release-slack-bot#slack-access-tokenchannel-usage
         description: 'Slack channel'
         required: false
+        type: string
 jobs:
   version:
     runs-on: ubuntu-latest
