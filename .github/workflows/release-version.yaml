@@ -11,9 +11,9 @@ concurrency:
 
 jobs:
   version:
-    - uses: stacc/github-workflow-actions/.github/workflows/version.yaml@main
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+    uses: stacc/github-workflow-actions/.github/workflows/version.yaml@main
+    with:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
 
 
 
