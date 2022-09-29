@@ -1,4 +1,4 @@
-name: Publish todo
+name: Deploy todo
 
 on: workflow_call
 
