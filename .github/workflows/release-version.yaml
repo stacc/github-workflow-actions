@@ -15,15 +15,4 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - uses: cycjimmy/semantic-release-action@v3
-        id: semantic
-        with:
-          extra_plugins: '@semantic-release/changelog @semantic-release/git @semantic-release/exec semantic-release-slack-bot'
-          extends: '@stacc/semantic-release-config'
-          branches: |
-            ['main']
-          dry_run: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_RELEASE_BOT_WEBHOOK }}
-          NPM_TOKEN: '' #No npm package should be published
+      - uses: stacc/github-workflow-actions/version@v1
