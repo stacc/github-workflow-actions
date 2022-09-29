@@ -1,4 +1,5 @@
-name: Run semantic-release and publish new version
+name: Version
+description: Run semantic-release and publish new version
 inputs:
   branches: #Branches to release on
     description: 'Branches to release on'
@@ -33,17 +34,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: codfish/semantic-release-action@v2
+    - uses: cycjimmy/semantic-release-action@v3
       id: semantic
       with:
-        additional_packages: |
-          [
-            @semantic-release/changelog,
-            @semantic-release/git,
-            @semantic-release/exec,
-            semantic-release-slack-bot
-          ]
-        extends: @stacc/semantic-release-config
+        extra_plugins: |
+          ['@semantic-release/changelog', '@semantic-release/git' ,'@semantic-release/exec' ,'semantic-release-slack-bot']
+        extends: '@stacc/semantic-release-config'
         branches: ${{ inputs.branches }}
         dry_run: ${{ inputs.dry-run }}
       env:
@@ -54,18 +50,27 @@ runs:
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
         SLACK_CHANNEL: ${{ inputs.slack-channel }}
 outputs:
-  new-release-published:
-    description: "Either `'true'` when a new release was published or `'false'` when no release was published"
-    value: ${{ steps.semantic.outputs.new-release-published }}
-  release-version:
-    description: "The new releases' semantic version, i.e. `1.8.3`"
-    value: ${{ steps.semantic.outputs.release-version }}
-  release-major:
-    description: "The new releases' major version number, i.e. `1`"
-    value: ${{ steps.semantic.outputs.release-major }}
-  release-minor:
-    description: "The new releases' minor version number, i.e. `8`"
-    value: ${{ steps.semantic.outputs.release-minor }}
-  release-patch:
-    description: "The new releases' patch version number, i.e. `3`"
-    value: ${{ steps.semantic.outputs.release-patch }}
+  new_release_published:
+    value: ${{ steps.semantic.outputs.new_release_published }}
+    description: 'Whether a new release was published'
+  new_release_version:
+    value: ${{ steps.semantic.outputs.new_release_version }}
+    description: 'Version of the new release'
+  new_release_major_version:
+    value: ${{ steps.semantic.outputs.new_release_major_version }}
+    description: 'Major version of the new release'
+  new_release_minor_version:
+    value: ${{ steps.semantic.outputs.new_release_minor_version }}
+    description: 'Minor version of the new release'
+  new_release_patch_version:
+    value: ${{ steps.semantic.outputs.new_release_patch_version }}
+    description: 'Patch version of the new release'
+  new_release_channel:
+    value: ${{ steps.semantic.outputs.new_release_channel }}
+    description: 'The distribution channel on which the last release was initially made available (undefined for the default distribution channel).'
+  new_release_notes:
+    value: ${{ steps.semantic.outputs.new_release_notes }}
+    description: 'The release notes for the new release.'
+  last_release_version:
+    value: ${{ steps.semantic.outputs.last_release_version }}
+    description: 'Version of the previous release, if there was one.'
