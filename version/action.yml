@@ -13,7 +13,6 @@ inputs:
   github-token: #Github token
     description: 'Github token. Use a PAT token to trigger a release'
     required: false
-    default: ${{ secrets.GITHUB_TOKEN }}
   commit-changelog: #Commit changelog
     description: |
       Commits changelog. 
@@ -24,11 +23,9 @@ inputs:
   npm-token: #NPM token
     description: 'NPM token'
     required: false
-    default: ${{ secrets.NPM_TOKEN }}
   slack-webhook: #Slack webhook
     description: 'Slack webhook'
     required: false
-    default: ${{ secrets.SLACK_RELEASE_BOT_WEBHOOK }}
   slack-channel: #Slack channel. Look ABOVE this to read how this might work https://github.com/juliuscc/semantic-release-slack-bot#slack-access-tokenchannel-usage
     description: 'Slack channel'
     required: false
