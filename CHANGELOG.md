@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/stacc/github-workflow-actions/compare/v1.0.3...v1.0.4) (2022-09-29)
+
+
+### Bug Fixes
+
+* conditionally push to version branch ([f6fe04e](https://github.com/stacc/github-workflow-actions/commit/f6fe04ee05d2e15957512d1351ddfa88207b1eb5))
+
 ## [1.0.3](https://github.com/stacc/github-workflow-actions/compare/v1.0.2...v1.0.3) (2022-09-29)
 
 
