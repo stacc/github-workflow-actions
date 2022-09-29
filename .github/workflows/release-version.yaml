@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - uses: ./version.yaml
+      - uses:  ./.github/workflows/version.yaml
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
