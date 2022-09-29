@@ -16,8 +16,8 @@ jobs:
       - uses: cycjimmy/semantic-release-action@v3
         id: semantic
         with:
-          extra_plugins: @semantic-release/changelog @semantic-release/git @semantic-release/exec semantic-release-slack-bot
-          extends: @stacc/semantic-release-config
+          extra_plugins: '@semantic-release/changelog @semantic-release/git @semantic-release/exec semantic-release-slack-bot'
+          extends: '@stacc/semantic-release-config'
           branches: |
             ['main']
           dry_run: false
