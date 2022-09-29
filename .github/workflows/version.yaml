@@ -34,34 +34,44 @@ on:
         description: 'Slack channel'
         required: false
         type: string
+    outputs:
+      new_release_published:
+        value: ${{ jobs.version.outputs.new_release_published }}
+        description: 'Whether a new release was published'
+      new_release_version:
+        value: ${{ jobs.version.outputs.new_release_version }}
+        description: 'Version of the new release'
+      new_release_major_version:
+        value: ${{ jobs.version.outputs.new_release_major_version }}
+        description: 'Major version of the new release'
+      new_release_minor_version:
+        value: ${{ jobs.version.outputs.new_release_minor_version }}
+        description: 'Minor version of the new release'
+      new_release_patch_version:
+        value: ${{ jobs.version.outputs.new_release_patch_version }}
+        description: 'Patch version of the new release'
+      new_release_channel:
+        value: ${{ jobs.version.outputs.new_release_channel }}
+        description: 'The distribution channel on which the last release was initially made available (undefined for the default distribution channel).'
+      new_release_notes:
+        value: ${{ jobs.version.outputs.new_release_notes }}
+        description: 'The release notes for the new release.'
+      last_release_version:
+        value: ${{ jobs.version.outputs.last_release_version }}
+        description: 'Version of the previous release, if there was one.'
+
 jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
-      new_release_published:
-        value: ${{ steps.semantic.outputs.new_release_published }}
-        description: 'Whether a new release was published'
-      new_release_version:
-        value: ${{ steps.semantic.outputs.new_release_version }}
-        description: 'Version of the new release'
-      new_release_major_version:
-        value: ${{ steps.semantic.outputs.new_release_major_version }}
-        description: 'Major version of the new release'
-      new_release_minor_version:
-        value: ${{ steps.semantic.outputs.new_release_minor_version }}
-        description: 'Minor version of the new release'
-      new_release_patch_version:
-        value: ${{ steps.semantic.outputs.new_release_patch_version }}
-        description: 'Patch version of the new release'
-      new_release_channel:
-        value: ${{ steps.semantic.outputs.new_release_channel }}
-        description: 'The distribution channel on which the last release was initially made available (undefined for the default distribution channel).'
-      new_release_notes:
-        value: ${{ steps.semantic.outputs.new_release_notes }}
-        description: 'The release notes for the new release.'
-      last_release_version:
-        value: ${{ steps.semantic.outputs.last_release_version }}
-        description: 'Version of the previous release, if there was one.'
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+      new_release_major_version: ${{ steps.semantic.outputs.new_release_major_version }}
+      new_release_minor_version: ${{ steps.semantic.outputs.new_release_minor_version }}
+      new_release_patch_version: ${{ steps.semantic.outputs.new_release_patch_version }}
+      new_release_channel: ${{ steps.semantic.outputs.new_release_channel }}
+      new_release_notes: ${{ steps.semantic.outputs.new_release_notes }}
+      last_release_version: ${{ steps.semantic.outputs.last_release_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -78,15 +88,4 @@ jobs:
           COMMIT_CHANGE_LOG: ${{ inputs.commit-changelog }}
           SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
           SLACK_CHANNEL: ${{ inputs.slack-channel }}
-      - name: Set outputs #should not be necessary
-        run: |
-          echo "::set-output name=new_release_version::${{ steps.semantic.outputs.new_release_version }}"
-          echo "::set-output name=new_release_major_version::${{ steps.semantic.outputs.new_release_major_version }}"
-          echo "::set-output name=new_release_minor_version::${{ steps.semantic.outputs.new_release_minor_version }}"
-          echo "::set-output name=new_release_patch_version::${{ steps.semantic.outputs.new_release_patch_version }}"
-          echo "::set-output name=new_release_published::${{ steps.semantic.outputs.new_release_published }}"
-          echo "::set-output name=new_release_channel::${{ steps.semantic.outputs.new_release_channel }}"
-          echo "::set-output name=new_release_notes::${{ steps.semantic.outputs.new_release_notes }}"
-          echo "::set-output name=last_release_version::${{ steps.semantic.outputs.last_release_version }}"
-
 
