@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/stacc/github-workflow-actions/compare/v1.0.6...v1.0.7) (2022-09-29)
+
+
+### Bug Fixes
+
+* make sure to checkout ([3d2dec8](https://github.com/stacc/github-workflow-actions/commit/3d2dec896e5ae2befc374731a4db98677472a691))
+
 ## [1.0.6](https://github.com/stacc/github-workflow-actions/compare/v1.0.5...v1.0.6) (2022-09-29)
 
 
