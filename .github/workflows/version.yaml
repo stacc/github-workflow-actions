@@ -78,5 +78,15 @@ jobs:
           COMMIT_CHANGE_LOG: ${{ inputs.commit-changelog }}
           SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
           SLACK_CHANNEL: ${{ inputs.slack-channel }}
+      - name: Set outputs #should not be necessary
+        run: |
+          echo "::set-output name=new_release_version::${{ steps.semantic.outputs.new_release_version }}"
+          echo "::set-output name=new_release_major_version::${{ steps.semantic.outputs.new_release_major_version }}"
+          echo "::set-output name=new_release_minor_version::${{ steps.semantic.outputs.new_release_minor_version }}"
+          echo "::set-output name=new_release_patch_version::${{ steps.semantic.outputs.new_release_patch_version }}"
+          echo "::set-output name=new_release_published::${{ steps.semantic.outputs.new_release_published }}"
+          echo "::set-output name=new_release_channel::${{ steps.semantic.outputs.new_release_channel }}"
+          echo "::set-output name=new_release_notes::${{ steps.semantic.outputs.new_release_notes }}"
+          echo "::set-output name=last_release_version::${{ steps.semantic.outputs.last_release_version }}"
 
 
