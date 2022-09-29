@@ -18,8 +18,8 @@ jobs:
         id: semantic
         with:
           additional_packages: | 
-            ['@semantic-release/changelog','@semantic-release/git','@semantic-release/exec','semantic-release-slack-bot']
-          extends: @stacc/semantic-release-config
+            ['@semantic-release/changelog', '@semantic-release/git' ,'@semantic-release/exec' ,'semantic-release-slack-bot']
+          extends: '@stacc/semantic-release-config'
           branches: 'main'
           dry_run: 'false'
         env:
