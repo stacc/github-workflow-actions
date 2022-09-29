@@ -1,3 +1,10 @@
+## [1.0.9](https://github.com/stacc/github-workflow-actions/compare/v1.0.8...v1.0.9) (2022-09-29)
+
+
+### Bug Fixes
+
+* use force 🦾 ([1f2d181](https://github.com/stacc/github-workflow-actions/commit/1f2d18171fbe8d07f4be1428cd30de9cfa71870f))
+
 ## [1.0.8](https://github.com/stacc/github-workflow-actions/compare/v1.0.7...v1.0.8) (2022-09-29)
 
 
