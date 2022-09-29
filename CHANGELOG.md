@@ -1,3 +1,12 @@
+## [1.0.8](https://github.com/stacc/github-workflow-actions/compare/v1.0.7...v1.0.8) (2022-09-29)
+
+
+### Bug Fixes
+
+* hyphenate 🙈 ([c4fae4d](https://github.com/stacc/github-workflow-actions/commit/c4fae4d3cdfaedd5d81c2adf695af2156972f7ee))
+* hyphenate 🙈 ([7b6ea64](https://github.com/stacc/github-workflow-actions/commit/7b6ea644c86bad2f4462807dc7f835f5e72263ae))
+* push command and add slack ([e6d25b3](https://github.com/stacc/github-workflow-actions/commit/e6d25b35ea64eeb59c94644f38ec936768b96a92))
+
 ## [1.0.7](https://github.com/stacc/github-workflow-actions/compare/v1.0.6...v1.0.7) (2022-09-29)
 
 
