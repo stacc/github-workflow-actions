@@ -21,8 +21,11 @@ jobs:
       - name: Read output
         run: |
           echo "Output coming"
-          echo ${{ needs.version.outputs }} | jq
+          echo ${{ needs.version.outputs.new_release_published }}
+          echo ${{ needs.version.outputs.last_release_version }}
+
       - name: Copy latest into a simple version branch
+        if: needs.version.outputs.new_release_published == 'true'
         run: |
           git branch -B --force v1 ${{ github.sha }} && git push origin v1
 
