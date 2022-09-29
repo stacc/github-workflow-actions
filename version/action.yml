@@ -12,7 +12,7 @@ inputs:
     default: 'false'
   github-token: #Github token
     description: 'Github token. Use a PAT token to trigger a release'
-    required: false
+    required: true
   commit-changelog: #Commit changelog
     description: |
       Commits changelog. 
