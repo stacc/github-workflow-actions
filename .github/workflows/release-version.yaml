@@ -11,11 +11,9 @@ concurrency:
 
 jobs:
   version:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - uses:  stacc/github-workflow-actions/.github/workflows/version.yaml@main
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: stacc/github-workflow-actions/.github/workflows/version.yaml@main
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+
 
