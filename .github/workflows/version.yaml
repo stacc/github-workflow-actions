@@ -4,15 +4,12 @@ on:
     secrets:
       github-token:
         description: 'GitHub token'
-        type: string
         required: true
       npm-token:
         description: 'NPM token'
-        type: string
         required: false
       slack_webhook:
         description: 'Slack webhook for release bot'
-        type: string
         required: false
     inputs:
       branches: #Branches to release on
