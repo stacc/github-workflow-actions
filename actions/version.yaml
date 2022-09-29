@@ -1,0 +1,50 @@
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        description: 'GitHub token'
+        required: true
+      npm-token:
+        description: 'NPM token'
+        required: false
+      slack_webhook:
+        description: 'Slack webhook for release bot'
+        required: false
+    inputs:
+      branches: #Branches to release on
+        description: 'Branches to release on'
+        required: false
+        default: |
+          ['main']
+      dry-run: #Dry run
+        description: 'Dry run'
+        required: false
+        default: false
+      commit-changelog: #Commit changelog
+        description: |
+          Commits changelog. 
+          Warning, this will create a new commit and triggers 
+          on "published" might not have correct ref to evaluate PRs'
+        required: false
+      slack-channel: #Slack channel. Look ABOVE this to read how this might work https://github.com/juliuscc/semantic-release-slack-bot#slack-access-tokenchannel-usage
+        description: 'Slack channel'
+        required: false
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: cycjimmy/semantic-release-action@v3
+        id: semantic
+        with:
+          extra_plugins: '@semantic-release/changelog @semantic-release/git @semantic-release/exec semantic-release-slack-bot'
+          extends: '@stacc/semantic-release-config'
+          branches: ${{ inputs.branches }}
+          dry_run: ${{ inputs.dry-run }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+          NPM_TOKEN: ${{ secrets.npm-token }}
+          COMMIT_CHANGE_LOG: ${{ inputs.commit-changelog }}
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_CHANNEL: ${{ inputs.slack-channel }}
+
+
