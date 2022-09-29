@@ -14,6 +14,7 @@ jobs:
     uses: stacc/github-workflow-actions/.github/workflows/version.yaml@main
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
+      slack-webhook: ${{ secrets.SLACK_RELEASE_BOT_WEBHOOK }}
   updateLatest:
     runs-on: ubuntu-latest
     needs: version
@@ -27,7 +28,7 @@ jobs:
           echo ${{ needs.version.outputs.last_release_version }}
       - name: Copy latest into a simple version branch
         run: |
-          git branch -B --force v${{ needs.version.outputs.new_release_major_version }} ${{ github.sha }} && git push origin v${{ needs.version.outputs.new_release_major_version }}
+          git branch --force v${{ needs.version.outputs.new_release_major_version }} ${{ github.sha }} && git push origin v${{ needs.version.outputs.new_release_major_version }}
 
 
 
