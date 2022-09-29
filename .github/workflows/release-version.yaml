@@ -27,6 +27,7 @@ jobs:
           echo ${{ needs.version.outputs.new_release_published }}
           echo ${{ needs.version.outputs.last_release_version }}
       - name: Copy latest into a simple version branch
+        if: needs.version.outputs.new_release_published == 'true'
         run: |
           git branch --force v${{ needs.version.outputs.new_release_major_version }} ${{ github.sha }} && git push origin v${{ needs.version.outputs.new_release_major_version }} --force
 
