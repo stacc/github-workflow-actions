@@ -1,3 +1,11 @@
+## [1.0.6](https://github.com/stacc/github-workflow-actions/compare/v1.0.5...v1.0.6) (2022-09-29)
+
+
+### Bug Fixes
+
+* always use latest self ([7faa7e0](https://github.com/stacc/github-workflow-actions/commit/7faa7e0b894a1921042baf0bc1c35fb900191ac3))
+* outputs everywhere ([a4aeabd](https://github.com/stacc/github-workflow-actions/commit/a4aeabd66e500df17efc6dcd75c01a0a458e49a5))
+
 ## [1.0.5](https://github.com/stacc/github-workflow-actions/compare/v1.0.4...v1.0.5) (2022-09-29)
 
 
