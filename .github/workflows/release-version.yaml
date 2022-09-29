@@ -17,13 +17,8 @@ jobs:
         # will dogfood version.yaml after first tag.
         id: semantic
         with:
-          additional_packages: |
-            [
-              '@semantic-release/changelog',
-              '@semantic-release/git',
-              '@semantic-release/exec',
-              'semantic-release-slack-bot'
-            ]
+          additional_packages: | 
+            ['@semantic-release/changelog','@semantic-release/git','@semantic-release/exec','semantic-release-slack-bot']
           extends: @stacc/semantic-release-config
           branches: 'main'
           dry_run: 'false'
