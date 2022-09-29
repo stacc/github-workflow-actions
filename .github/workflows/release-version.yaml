@@ -15,4 +15,4 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - uses: stacc/github-workflow-actions/version@v1
+      - uses: stacc/github-workflow-actions/version@main
