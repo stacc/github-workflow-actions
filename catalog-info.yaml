@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: github-workflow-actions
+  description: Composite actions to simplify GitHub workflows in Stacc
+  tags:
+    - semantic-release
+    - github
+    - github-workflows
+    - github-actions
+  annotations:
+    github.com/project-slug: stacc/github-workflow-actions
+    backstage.io/techdocs-ref: dir:.
+    #snyk.io/org-name: team-roadies #add when commit first time
+    #snyk.io/project-ids: 8e2c32cd-c90b-4a60-b36d-ab6a8af14e7a
+spec:
+  type: library
+  owner: team-roadies
+  lifecycle: experimental

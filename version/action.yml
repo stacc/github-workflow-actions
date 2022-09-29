@@ -1,0 +1,71 @@
+name: Run semantic-release and publish new version
+inputs:
+  branches: #Branches to release on
+    description: 'Branches to release on'
+    required: false
+    default: 'main'
+  dry-run: #Dry run
+    description: 'Dry run'
+    required: false
+    default: 'false'
+  github-token: #Github token
+    description: 'Github token. Use a PAT token to trigger a release'
+    required: false
+    default: ${{ secrets.GITHUB_TOKEN }}
+  commit-changelog: #Commit changelog
+    description: |
+      Commits changelog. 
+      Warning, this will create a new commit and triggers 
+      on "published" might not have correct ref to evaluate PRs'
+    required: false
+    default: 'false'
+  npm-token: #NPM token
+    description: 'NPM token'
+    required: false
+    default: ${{ secrets.NPM_TOKEN }}
+  slack-webhook: #Slack webhook
+    description: 'Slack webhook'
+    required: false
+    default: ${{ secrets.SLACK_RELEASE_BOT_WEBHOOK }}
+  slack-channel: #Slack channel. Look ABOVE this to read how this might work https://github.com/juliuscc/semantic-release-slack-bot#slack-access-tokenchannel-usage
+    description: 'Slack channel'
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - uses: codfish/semantic-release-action@v2
+      id: semantic
+      with:
+        additional_packages: |
+          [
+            @semantic-release/changelog,
+            @semantic-release/git,
+            @semantic-release/exec,
+            semantic-release-slack-bot
+          ]
+        extends: @stacc/semantic-release-config
+        branches: ${{ inputs.branches }}
+        dry_run: ${{ inputs.dry-run }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        NPM_TOKEN: ${{ inputs.npm-token }}
+        SLACK_RELEASE_BOT_WEBHOOK: ${{ inputs.slack-webhook }}
+        COMMIT_CHANGE_LOG: ${{ inputs.commit-changelog }}
+        SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
+        SLACK_CHANNEL: ${{ inputs.slack-channel }}
+outputs:
+  new-release-published:
+    description: "Either `'true'` when a new release was published or `'false'` when no release was published"
+    value: ${{ steps.semantic.outputs.new-release-published }}
+  release-version:
+    description: "The new releases' semantic version, i.e. `1.8.3`"
+    value: ${{ steps.semantic.outputs.release-version }}
+  release-major:
+    description: "The new releases' major version number, i.e. `1`"
+    value: ${{ steps.semantic.outputs.release-major }}
+  release-minor:
+    description: "The new releases' minor version number, i.e. `8`"
+    value: ${{ steps.semantic.outputs.release-minor }}
+  release-patch:
+    description: "The new releases' patch version number, i.e. `3`"
+    value: ${{ steps.semantic.outputs.release-patch }}

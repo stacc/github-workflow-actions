@@ -1,0 +1,33 @@
+-name: Release new version
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: release-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: codfish/semantic-release-action@v2
+        # will dogfood version.yaml after first tag.
+        id: semantic
+        with:
+          additional_packages: |
+            [
+              @semantic-release/changelog,
+              @semantic-release/git,
+              @semantic-release/exec,
+              semantic-release-slack-bot
+            ]
+          extends: @stacc/semantic-release-config
+          branches: 'main'
+          dry_run: 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_RELEASE_BOT_WEBHOOK }}
+          NPM_TOKEN: '' #No npm package should be published

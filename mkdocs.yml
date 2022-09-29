@@ -1,0 +1,8 @@
+site_name: "Stacc Github Workflow Actions"
+
+nav:
+  - Home: index.md
+  - Version: version.md
+
+plugins:
+  - techdocs-core
