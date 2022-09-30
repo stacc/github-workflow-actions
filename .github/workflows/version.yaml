@@ -85,6 +85,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.github-token }}
           NPM_TOKEN: ${{ secrets.npm-token }}
+          NPM_PUBLISH: true #Will release if NPM token is set. If NPM_TOKEN is not set, nothing will happen
           COMMIT_CHANGE_LOG: ${{ inputs.commit-changelog }}
           SLACK_WEBHOOK: ${{ secrets.slack-webhook }}
           SLACK_CHANNEL: ${{ inputs.slack-channel }}
