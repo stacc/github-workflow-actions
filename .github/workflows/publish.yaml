@@ -1,0 +1,40 @@
+name: Publish new image
+
+on:
+  release:
+    types:
+      - published
+concurrency:
+  group: release-${{ github.ref }}-1
+  cancel-in-progress: true
+
+env:
+  junit-artifact-name: 'junit-test-results'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./demo
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci
+      - name: Run nodejs tests
+        run: npm run test:ci
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.junit-artifact-name }}
+          path: test-results
+  publish:
+    uses: stacc/github-workflow-actions/publish-image.yaml@v1
+    with:
+      image: "stacc-reusable-workflows-demo"
+      snyk-org: "team-roadies"
+      junit-artifact-name: ${{ env.junit-artifact-name }}
