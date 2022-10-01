@@ -4,6 +4,7 @@ on:
   release:
     types:
       - published
+
 concurrency:
   group: release-${{ github.ref }}-1
   cancel-in-progress: true
@@ -12,6 +13,7 @@ env:
   junit-artifact-name: 'junit-test-results'
 jobs:
   test:
+    name: Run tests
     runs-on: ubuntu-latest
     defaults:
       run:
