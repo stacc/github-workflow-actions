@@ -83,7 +83,7 @@ jobs:
         run: |
           echo "Validating ${{ inputs.kosli-declare }}"
       - name: Cancel if no Pull Request or test
-        if: !contains(inputs.kosli-declare, 'pull-request') || !contains(inputs.kosli-declare, 'test')
+        if: contains(inputs.kosli-declare, 'pull-request') == 'false' || contains(inputs.kosli-declare, 'test') == 'false'
         run: |
           ::debug::Kosli declare does not contain pull-request or test. These are required
           ::set-failed
