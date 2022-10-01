@@ -33,7 +33,7 @@ jobs:
           name: ${{ env.junit-artifact-name }}
           path: test-results
   publish:
-    uses: stacc/github-workflow-actions/publish-image.yaml@v1
+    uses: stacc/github-workflow-actions/.github/workflows/publish-image.yaml@main
     with:
       image: "stacc-reusable-workflows-demo"
       snyk-org: "team-roadies"
