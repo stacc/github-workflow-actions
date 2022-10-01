@@ -40,43 +40,29 @@ jobs:
       latest-branch:
 
 ```
-Using all the inputs
-```yaml
-  - uses: stacc/github-workflow-actions/version@v1
-    secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
-      npm-token: ${{ secrets.NPM_TOKEN }}
-      #if you have a npm package to release as well. Will save tarball to Github Release
-      slack-webhook: ${{ SLACK_RELEASE_BOT_WEBHOOK }} 
-      #if you want to send a slack message when a release is created
-    with:
-      branches: ['main']
-      dry_run: false
-      commit-changelog: true
-      slack-channel: "npm-release-feed"
-```
+
 ## Secrets
-| Name | Description | Required |
-| ---- | ----------- | -------- |
-| github-token | Github token to use for creating releases | Yes |
-| npm-token | Npm token to use for publishing packages | No |
-| slack-webhook | Slack webhook to use for sending messages | No |
+Secrets are inherited. Stacc Org secrets are used by default.
 
 ## Inputs
-| Name | Description                                             | Default |
-| ---- |---------------------------------------------------------| ------- |
-| branches | Branches to run on                                      | main |
-| dry_run | If true, will not create a release                      | false |
-| commit-changelog | If true, will commit the changelog to the repository    | false |
+| Name                        | Description                                | Default                                                               | Required |
+|-----------------------------|--------------------------------------------|-----------------------------------------------------------------------|----------|
+| image                       | image name like 'services-someservice'     |                                                                       | yes      |
+| container-registry-host     | registry host                              | stacc.azurecr.io                                                      | no       |
+| helm-repo                   | home of the helm charts                    | stacc                                                                 | no       |
+| kosli-declare               | what types of evidence should we collect   | pull-request,artifact,test,container-security-scan,code-security-scan | no       |
+| kosli-pipeline              | Name of the Kosli pipeline                 | ${{inputs.image}}                                                     | no       |
+| kosli-owner                 | Name of the Kosli owner                    | stacc                                                                 | no       |
+| kosli-host                  | Kosli host                                 | https://stacc.kosli.com                                               | no       |
+| kosli-environment           | Name of the environment                    | stacc-acr-registry                                                    | no       |
+| kosli-environment-type      | Type of environment                        | server ([K8S, ECS, server, S3, lambda])                               | no       |
+| junit-result            | JUnit result (as xml) converted to string  | undefined                                                             | no       |
+| snyk-org                    | Snyk organization                          | undefined                                                             | yes      |
+| snyk-test-additional-params | Additional parameters to pass to Snyk test | undefined                                                             | no       |
+| auto-approve                | Should this pipeline be auto approved?     | true                                                                  | no       |
+| latest-branch               | Latest branch name (or tag name)           | latest                                                                | no       |
 
 ## Outputs
 | Name                      | Description | Example      | 
 |---------------------------|-------------|--------------|
-| new_release_published     |Whether a new release was published             | true/false   |
-| new_release_version       |Version of the new release             | 1.2.3        |
-| new_release_major_version |Major version of the new release             | 1            |
-| new_release_minor_version |Minor version of the new release             | 2            |
-| new_release_patch_version |Patch version of the new release             | 3            |
-| new_release_channel       |The distribution channel on which the <br/>last release was initially made available <br/>(undefined for the default distribution channel).             | undefined    |
-| new_release_notes         |The release notes for the new release.             | New release! |
-| last_release_version      |Version of the previous release, if there was one.             | 1.2.2        |
+| TODO:
