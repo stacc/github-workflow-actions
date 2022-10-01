@@ -9,6 +9,7 @@ Almost all inputs have defaults, so you can just use this action with minimal co
     with:
       image: "my-image-name"
       snyk-org: "my-team"
+      junit-artifact-name: name-i-gave-my-upload-artifact
 ```
 With everything version
 ```yaml
@@ -23,7 +24,6 @@ jobs:
     with:
       image:
       container-registry-host:
-      container-registry-name:
       helm-repo:
       kosli-declare:
       kosli-pipeline:
@@ -31,14 +31,11 @@ jobs:
       kosli-host:
       kosli-environment:
       kosli-environment-type:
-      npm-test-script:
-      npm-test-output-dir:
-      node-version:
+      junit-artifact-name:
       snyk-org:
       snyk-test-additional-params:
       auto-approve:
       latest-branch:
-
 ```
 
 ## Secrets
