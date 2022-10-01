@@ -12,11 +12,6 @@ on:
         required: false
         default: 'stacc.azurecr.io'
         type: string
-      container-registry-name:
-        description: 'Container registry name'
-        required: false
-        default: 'stacc.azurecr.io'
-        type: string
       helm-repo:
         description: 'Helm repo'
         required: false
@@ -51,20 +46,9 @@ on:
         required: false
         default: 'server'
         type: string
-      npm-test-script:
-        description: 'NPM test script'
+      junit-result:
+        description: 'JUnit result converted to string'
         required: false
-        default: 'npm test:ci'
-        type: string
-      npm-test-output-dir:
-        description: 'NPM output directory'
-        required: false
-        default: 'test-results'
-        type: string
-      node-version:
-        description: 'NPM version to setup'
-        required: false
-        default: '18'
         type: string
       snyk-org:
         description: 'Snyk organization. NOTE: Snyk calls a "team" an organization'
@@ -197,24 +181,19 @@ jobs:
       - name: Report pull request
         run: |
           kosli pipeline artifact report evidence github-pullrequest "${{ needs.publish.outputs.image }}" --github-token ${{ secrets.GITHUB_TOKEN }} --sha256 ${{ needs.publish.outputs.sha256 }} --evidence-type pull-request
-  npm:
-    if: inputs.npm-test-script != ''
+  junit:
+    if: inputs.junit-result
     needs: publish
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ inputs.node-version }}
-          cache: 'npm'
-      - run: npm ci
-      - name: Run nodejs tests
-        run: ${{ inputs.npm-test-script }}
-      - name: Report test results to Kosli
-        run: kosli pipeline artifact report evidence test ${{ needs.publish.outputs.image }} -e test --sha256 ${{ needs.publish.outputs.sha256 }} --results-dir ${{ inputs.npm-test-output-dir }}
+      - name: Setup kosli
+        uses: kosli-dev/setup-cli-action@v1
+      - name: Output results into local file
+        run: |
+          mkdir -p data/junit
+          echo ${{ inputs.junit-result }} > data/junit/junit.xml
+      - name: Report JUnit test results to Kosli
+        run: kosli pipeline artifact report evidence test ${{ needs.publish.outputs.image }} -d "JUnit Results" -e test --sha256 ${{ needs.publish.outputs.sha256 }}
   snyk:
     needs: publish
     runs-on: ubuntu-latest
