@@ -181,17 +181,28 @@ jobs:
       - name: Report pull request
         run: |
           kosli pipeline artifact report evidence github-pullrequest "${{ needs.publish.outputs.image }}" --github-token ${{ secrets.GITHUB_TOKEN }} --sha256 ${{ needs.publish.outputs.sha256 }} --evidence-type pull-request
-  junit:
-    if: inputs.junit-result
+  test:
+    if: inputs.junit-artifact-name != ''
     needs: publish
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/download-artifact@v3
+        id: download-artifact
+        with:
+          name: ${{ inputs.junit-artifact-name }}
+          path: data/junit
+      - name: Output results into local file
+        # use jq to trim?
+        run: |
+          cd data/junit
+          echo ::set-output name=files::ls -a | wc -l | jq
+      - name: No test results found
+        if: steps.download-artifact.outputs.files == 0
+        run: |
+          echo "No test results found"
+          ::set-failed
       - name: Setup kosli
         uses: kosli-dev/setup-cli-action@v1
-      - name: Output results into local file
-        run: |
-          mkdir -p data/junit
-          echo ${{ inputs.junit-result }} > data/junit/junit.xml
       - name: Report JUnit test results to Kosli
         run: kosli pipeline artifact report evidence test ${{ needs.publish.outputs.image }} -d "JUnit Results" -e test --sha256 ${{ needs.publish.outputs.sha256 }}
   snyk:
@@ -218,7 +229,7 @@ jobs:
       - name: Report Snyk results to Kosli
         run: kosli pipeline artifact report evidence generic ${{ needs.publish.outputs.image }} -e code-security-scan --sha256 ${{ needs.publish.outputs.sha256 }} -u snyk-container-report.json
   approval:
-    needs: [publish, pull-request, npm, snyk]
+    needs: [publish, pull-request, npm, snyk, test]
     if: inputs.auto-approve == 'true'
     runs-on: ubuntu-latest
     steps:
