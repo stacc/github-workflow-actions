@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/stacc/github-workflow-actions/compare/v1.1.0...v1.1.1) (2022-10-03)
+
+
+### Bug Fixes
+
+* **publish-image:** fix trigger to allow runs after release ([#2](https://github.com/stacc/github-workflow-actions/issues/2)) ([d734dea](https://github.com/stacc/github-workflow-actions/commit/d734dea565e4f171448ca392ca4c63afb3090eae))
+
 # [1.1.0](https://github.com/stacc/github-workflow-actions/compare/v1.0.10...v1.1.0) (2022-10-03)
 
 
