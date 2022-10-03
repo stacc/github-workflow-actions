@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/stacc/github-workflow-actions/compare/v1.0.10...v1.1.0) (2022-10-03)
+
+
+### Features
+
+* add new reusable workflow publish-image ([#1](https://github.com/stacc/github-workflow-actions/issues/1)) ([1438e30](https://github.com/stacc/github-workflow-actions/commit/1438e30d552f332579fc3e2b1f134d7df37fe60e))
+
 ## [1.0.10](https://github.com/stacc/github-workflow-actions/compare/v1.0.9...v1.0.10) (2022-09-30)
 
 
