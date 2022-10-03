@@ -1,0 +1,20 @@
+{
+  "name": "@stacc/reusable-workflows-demo",
+  "version": "1.0.0",
+  "description": "Used only to demonstrate reusable workflows",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava",
+    "test:ci": "ava --tap | tap-junit -o test-results"
+  },
+  "devDependencies": {
+    "ava": "^4.3.0",
+    "tap-junit": "^5.0.2"
+  },
+  "dependencies": {
+    "is-odd": "^3.0.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

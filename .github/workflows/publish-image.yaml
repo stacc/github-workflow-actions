@@ -1,0 +1,259 @@
+name: Build and publish artifact to container registry
+on:
+  workflow_call:
+    secrets: inherit
+    inputs:
+      image:
+        description: 'Image name'
+        required: true
+        type: string
+      container-registry-host:
+        description: 'Container registry'
+        required: false
+        default: 'stacc.azurecr.io'
+        type: string
+      helm-repo:
+        description: 'Helm repo'
+        required: false
+        default: 'stacc'
+        type: string
+      kosli-declare:
+        description: 'Declare Kosli pipeline'
+        required: false
+        default: 'pull-request,artifact,test,container-security-scan,code-security-scan'
+        type: string
+      kosli-pipeline:
+        description: 'Name of the Kosli pipeline. Will default to "inputs.image" if not set'
+        required: false
+        type: string
+      kosli-owner:
+        description: 'Name of the Kosli owner'
+        required: false
+        default: 'stacc'
+        type: string
+      kosli-host:
+        description: 'Name of the Kosli host'
+        required: false
+        default: 'https://stacc.kosli.com'
+        type: string
+      kosli-environment:
+        description: 'Name of the Kosli environment'
+        required: false
+        default: 'stacc-acr-registry'
+        type: string
+      kosli-environment-type:
+        description: 'Name of the Kosli environment-type'
+        required: false
+        default: 'server'
+        type: string
+      junit-result:
+        description: 'JUnit result converted to string'
+        required: false
+        type: string
+      snyk-org:
+        description: 'Snyk organization. NOTE: Snyk calls a "team" an organization'
+        required: true
+        type: string
+      snyk-test-additional-params:
+        description: 'Additional parameters to pass to Snyk test'
+        required: false
+        default: ''
+        type: string
+      auto-approve:
+        description: 'Auto approve pipeline on the grounds of pull request?'
+        required: false
+        default: true
+        type: boolean
+      latest-branch:
+        description: 'Branch with last reported version. This gets pushed to by the workflow'
+        required: false
+        default: 'latest'
+        type: string
+    outputs:
+      version: ${{ jobs.publish.outputs.version }}
+      digest: ${{ jobs.publish.outputs.digest }}
+      sha256: ${{ jobs.publish.outputs.sha256 }} # cleaner in subsequent jobs?
+      image: ${{ jobs.publish.outputs.image }} # output new image
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate kosli-declare
+        run: |
+          echo "Validating ${{ inputs.kosli-declare }}"
+      - name: Cancel if no Pull Request or test
+        if: contains(inputs.kosli-declare, 'pull-request') == 'false' || contains(inputs.kosli-declare, 'test') == 'false'
+        run: |
+          ::debug::Kosli declare does not contain pull-request or test. These are required
+          ::set-failed
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Validate latest branch exists
+        run: |
+          (git show-branch ${{inputs.latest-branch}} &>/dev/null) && (git checkout ${{inputs.latest-branch}}) || (git checkout -b ${{inputs.latest-branch}})
+  initialize:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set envs
+        run: |
+          echo "Setting Kosli env vars"
+          echo "KOSLI_OWNER=${{ inputs.kosli-owner }}" >> $GITHUB_ENV
+          echo "KOSLI_HOST=${{ inputs.kosli-host }}" >> $GITHUB_ENV
+          echo "KOSLI_PIPELINE=${{ inputs.kosli-pipeline || inputs.image }}" >> $GITHUB_ENV
+          echo "KOSLI_API_TOKEN=${{ secrets.KOSLI_API_TOKEN }}" >> $GITHUB_ENV
+      - name: Setup kosli
+        uses: kosli-dev/setup-cli-action@v1
+      - name: Declare Kosli pipeline
+        run: |
+          kosli pipeline declare --template ${{inputs.kosli-declare}}
+      - name: Create environment in Kosli
+        run: kosli environment declare --name ${{ inputs.kosli-environment }} --environment-type ${{ inputs.kosli-environment-type }}
+  publish:
+    needs: initialize
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup kosli
+        uses: kosli-dev/setup-cli-action@v1
+      - uses: docker/metadata-action@v4
+        id: meta
+        with:
+          tags: type=semver,pattern={{version}},value=${{github.ref_name}}
+          images: ${{inputs.container-registry-host}}/${{ inputs.image }}
+      - name: Docker Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.container-registry-host }}
+          username: ${{ secrets.acr_publish_client_id }}
+          password: ${{ secrets.acr_publish_client_secret }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Make the image digest available
+        id: digest-prep
+        run: |
+          ARTIFACT_SHA=$( echo ${{ steps.docker_build.outputs.digest }} | sed 's/.*://')
+          echo "DIGEST=$ARTIFACT_SHA" >> ${GITHUB_ENV}
+          echo ::set-output name=image-digest::${ARTIFACT_SHA}
+      - name: Report Docker image in Kosli
+        run: |
+          kosli pipeline artifact report creation ${{ inputs.container-registry-host }}/${{ input.image }}:${{ steps.meta.outputs.version }}
+          --sha256 ${{ env.DIGEST }}
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.stacc_acr_sdk_auth }}
+      - uses: azure/setup-helm@v3
+        with:
+          version: v3.6.3
+          token: ${{ secrets.GITHUB_TOKEN }}
+        id: install-helm
+      - name: Init helm
+        run: az acr helm repo add -n ${{ inputs.helm-repo }}
+      - name: Package helm chart
+        run: helm package --version "${{ steps.meta.outputs.version }}" --app-version "${{ steps.meta.outputs.version}}" helm
+      - name: Push helm chart
+        run: |
+          az acr helm push -n ${{inputs.helm-repo}} ${{inputs.image}}-*.tgz
+      - name: Report deployment to registry in Kosli
+        run: kosli pipeline deployment report ${{ inputs.container-registry-host }}/${{ inputs.image }}:${{ steps.meta.outputs.version }} --sha256 ${{ env.DIGEST }} -e ${{ inputs.kosli-environment }}
+    outputs:
+        version: ${{ steps.meta.outputs.version }}
+        digest: ${{ steps.docker_build.outputs.digest }}
+        sha256: ${{ env.DIGEST }} # cleaner in subsequent jobs?
+        image: ${{ inputs.container-registry-host }}/${{ inputs.image }}:${{ steps.meta.outputs.version }} # output new image
+  pull-request:
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - name: Report pull request
+        run: |
+          kosli pipeline artifact report evidence github-pullrequest "${{ needs.publish.outputs.image }}" --github-token ${{ secrets.GITHUB_TOKEN }} --sha256 ${{ needs.publish.outputs.sha256 }} --evidence-type pull-request
+  test:
+    if: inputs.junit-artifact-name != ''
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        id: download-artifact
+        with:
+          name: ${{ inputs.junit-artifact-name }}
+          path: data/junit
+      - name: Output results into local file
+        # use jq to trim?
+        run: |
+          cd data/junit
+          echo ::set-output name=files::ls -a | wc -l | jq
+      - name: No test results found
+        if: steps.download-artifact.outputs.files == 0
+        run: |
+          echo "No test results found"
+          ::set-failed
+      - name: Setup kosli
+        uses: kosli-dev/setup-cli-action@v1
+      - name: Report JUnit test results to Kosli
+        run: kosli pipeline artifact report evidence test ${{ needs.publish.outputs.image }} -d "JUnit Results" -e test --sha256 ${{ needs.publish.outputs.sha256 }}
+  snyk:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: snyk/actions/setup@master
+      - name: Snyk dependency test
+        run: snyk test --fail-on=patchable --prune-repeated-subdependencies --json-file-output=snyk-report.json --org=${{ inputs.snyk-org }} ${{ inputs.snyk-test-additional-params }}
+      - name: Report Snyk results to Kosli
+        run: kosli pipeline artifact report evidence generic ${{ needs.publish.outputs.image }} -e container-security-scan --sha256 ${{ needs.publish.outputs.sha256 }} -u snyk-report.json
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.container-registry-host }}
+          username: ${{ secrets.acr_publish_client_id }} # should we avoid secrets:inherit?
+          password: ${{ secrets.acr_publish_client_secret }}
+      - name: Snyk container test
+        run: snyk container test ${{ needs.publish.outputs.image }} --fail-on=patchable --json-file-output=snyk-container-report.json --org=${{ inputs.snyk-org }}
+      - name: Report Snyk results to Kosli
+        run: kosli pipeline artifact report evidence generic ${{ needs.publish.outputs.image }} -e code-security-scan --sha256 ${{ needs.publish.outputs.sha256 }} -u snyk-container-report.json
+  approval:
+    needs: [publish, pull-request, npm, snyk, test]
+    if: inputs.auto-approve == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.3
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Store approver data
+        run: |
+          echo '${{ steps.get_release.outputs.author }}' | jq > approver.json
+      - name: Report release approval to Kosli
+        run: kosli pipeline approval report ${{ needs.publish.outputs.image }} --description "Auto approval granted via Pull Request" --newest-commit ${{ github.sha }} --oldest-commit $(git rev-parse origin/${{inputs.latest-branch}}) --sha256 ${{ needs.publish.outputs.sha256 }} -u approver.json
+  update-latest:
+    needs: approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Mark latest release as using git branch
+        run: git branch --force ${{inputs.latest-branch}} ${{ github.sha }} && git push origin ${{inputs.latest-branch}}
