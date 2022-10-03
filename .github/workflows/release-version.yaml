@@ -13,7 +13,7 @@ jobs:
   version:
     uses: stacc/github-workflow-actions/.github/workflows/version.yaml@main
     secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.PAT_TOKEN }}
       slack-webhook: ${{ secrets.SLACK_RELEASE_BOT_WEBHOOK }}
   updateLatest:
     runs-on: ubuntu-latest
