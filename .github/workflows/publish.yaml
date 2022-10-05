@@ -39,3 +39,4 @@ jobs:
       image: "stacc-reusable-workflows-demo"
       snyk-org: "team-roadies"
       junit-artifact-name: ${{ env.junit-artifact-name }}
+    secrets: inherit

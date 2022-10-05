@@ -1,7 +1,16 @@
 name: Resuable Workflow for automatic semantic versioning
 on:
   workflow_call:
-    secrets: inherit
+    secrets:
+      github_token:
+        description: 'GitHub token'
+        required: true
+      npm_token:
+        description: 'NPM token'
+        required: false
+      slack_release_bot_webhook:
+        description: 'Slack webhook for release bot'
+        required: false
     inputs:
       branches: #Branches to release on
         description: 'Branches to release on'
@@ -80,10 +89,10 @@ jobs:
           branches: ${{ inputs.branches }}
           dry_run: ${{ inputs.dry-run }}
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          NPM_TOKEN: ${{ secrets.npm_token }}
           NPM_PUBLISH: ${{ inputs.npm-publish }}
           COMMIT_CHANGE_LOG: ${{ inputs.commit-changelog }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_RELEASE_BOT_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.slack_release_bot_webhook }}
           SLACK_CHANNEL: ${{ inputs.slack-channel }}
 

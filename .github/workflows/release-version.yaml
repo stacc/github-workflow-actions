@@ -12,6 +12,7 @@ concurrency:
 jobs:
   version:
     uses: stacc/github-workflow-actions/.github/workflows/version.yaml@main
+    secrets: inherit
   updateLatest:
     runs-on: ubuntu-latest
     needs: version

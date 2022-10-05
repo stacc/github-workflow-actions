@@ -1,7 +1,16 @@
 name: Build and publish artifact to container registry
 on:
   workflow_call:
-    secrets: inherit
+    secrets:
+      github_token:
+        description: 'GitHub token'
+        required: true
+      npm_token:
+        description: 'NPM token'
+        required: false
+      slack_release_bot_webhook:
+        description: 'Slack webhook for release bot'
+        required: false
     inputs:
       image:
         description: 'Image name'
@@ -83,9 +92,9 @@ jobs:
         run: |
           echo "Validating ${{ inputs.kosli-declare }}"
       - name: Cancel if no Pull Request or test
-        if: contains(inputs.kosli-declare, 'pull-request') == 'false' || contains(inputs.kosli-declare, 'test') == 'false'
+        if: contains(inputs.kosli-declare, 'pull-request') == 'false'
         run: |
-          ::debug::Kosli declare does not contain pull-request or test. These are required
+          ::debug::Kosli declare does not contain pull-request. This is required
           ::set-failed
       - name: Checkout
         uses: actions/checkout@v3
