@@ -2,6 +2,9 @@ name: Resuable Workflow for automatic semantic versioning
 on:
   workflow_call:
     secrets:
+      pat_token:
+        description: 'Personal Access Token for GitHub Actions'
+        required: false
       npm_token:
         description: 'NPM token'
         required: false
@@ -86,7 +89,8 @@ jobs:
           branches: ${{ inputs.branches }}
           dry_run: ${{ inputs.dry-run }}
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          # If PAT token is sent, we can trigger release triggers. Which we want?
+          GITHUB_TOKEN: ${{ secrets.pat_token || secrets.github_token }}
           NPM_TOKEN: ${{ secrets.npm_token }}
           NPM_PUBLISH: ${{ inputs.npm-publish }}
           COMMIT_CHANGE_LOG: ${{ inputs.commit-changelog }}
