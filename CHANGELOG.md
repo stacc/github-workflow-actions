@@ -1,3 +1,13 @@
+## [1.1.2](https://github.com/stacc/github-workflow-actions/compare/v1.1.1...v1.1.2) (2022-10-05)
+
+
+### Bug Fixes
+
+* inherit secrets for version ([59b61e0](https://github.com/stacc/github-workflow-actions/commit/59b61e0ebc0a2d6262d36265b7b7d695bdcac3fb))
+* **publish-image:** use pat token to trigger release workflow ([#3](https://github.com/stacc/github-workflow-actions/issues/3)) ([6e05691](https://github.com/stacc/github-workflow-actions/commit/6e05691615683be3a4e62347ad431ab5819da5c8))
+* remove secret github_token as it is infered by the calling workflow ([2f4ac19](https://github.com/stacc/github-workflow-actions/commit/2f4ac19d3c6c545aaac2760b4700e7ea16d99a36))
+* update workflows to inherit secrets ([ecaba96](https://github.com/stacc/github-workflow-actions/commit/ecaba96a3a6d17a2619819f7e38bdb7874449e84))
+
 ## [1.1.1](https://github.com/stacc/github-workflow-actions/compare/v1.1.0...v1.1.1) (2022-10-03)
 
 
