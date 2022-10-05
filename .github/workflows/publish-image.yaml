@@ -2,9 +2,6 @@ name: Build and publish artifact to container registry
 on:
   workflow_call:
     secrets:
-      github_token:
-        description: 'GitHub token'
-        required: true
       npm_token:
         description: 'NPM token'
         required: false
