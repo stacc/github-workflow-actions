@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/stacc/github-workflow-actions/compare/v1.1.2...v1.1.3) (2022-10-05)
+
+
+### Bug Fixes
+
+* default to pat_token if provided ([af51485](https://github.com/stacc/github-workflow-actions/commit/af5148574e8c4c75369e9933332fa02000e3e1ab))
+
 ## [1.1.2](https://github.com/stacc/github-workflow-actions/compare/v1.1.1...v1.1.2) (2022-10-05)
 
 
