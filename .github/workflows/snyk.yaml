@@ -1,0 +1,53 @@
+name: Build and publish artifact to container registry
+on:
+  workflow_call:
+    secrets:
+      acr-username:
+        required: true
+      acr-password:
+        required: true
+    inputs:
+      snyk-org:
+        type: string
+        description: 'Snyk organization. NOTE: Snyk calls a "team" an organization'
+        required: true
+      image:
+        type: string
+        description: 'Name of the published image (with version)'
+        required: true
+      sha256:
+        type: string
+        required: true
+      snyk-test-additional-params:
+        type: string
+        description: 'Additional parameters to pass to Snyk test'
+        required: false
+        default: ''
+      acr-server:
+        type: string
+        required: false
+        default: 'stacc.azurecr.io'
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: snyk/actions/setup@master
+      - name: Snyk dependency test
+        run: snyk test --fail-on=patchable --prune-repeated-subdependencies --json-file-output=snyk-report.json --org=${{ inputs.snyk-org }} ${{ inputs.snyk-test-additional-params }}
+      - name: Report Snyk results to Kosli
+        run: kosli pipeline artifact report evidence generic ${{ inputs.image }} -e container-security-scan --sha256 ${{ inputs.sha256 }} -u snyk-report.json
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.acr-server }}
+          username: ${{ secrets.acr_username }}
+          password: ${{ secrets.acr_password }}
+      - name: Snyk container test
+        run: snyk container test ${{ inputs.image }} --fail-on=patchable --json-file-output=snyk-container-report.json --org=${{ inputs.snyk-org }}
+      - name: Report Snyk results to Kosli
+        run: kosli pipeline artifact report evidence generic ${{ inputs.image }} -e code-security-scan --sha256 ${{ inputs.sha256 }} -u snyk-container-report.json

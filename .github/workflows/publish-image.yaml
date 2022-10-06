@@ -69,13 +69,6 @@ on:
         default: 'latest'
         type: string
   workflow_call:
-    secrets:
-      npm_token:
-        description: 'NPM token'
-        required: false
-      slack_release_bot_webhook:
-        description: 'Slack webhook for release bot'
-        required: false
     inputs:
       image:
         description: 'Image name'
@@ -280,28 +273,7 @@ jobs:
       - name: Report JUnit test results to Kosli
         run: kosli pipeline artifact report evidence test ${{ needs.publish.outputs.image }} -d "JUnit Results" -e test --sha256 ${{ needs.publish.outputs.sha256 }}
   snyk:
-    needs: publish
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: snyk/actions/setup@master
-      - name: Snyk dependency test
-        run: snyk test --fail-on=patchable --prune-repeated-subdependencies --json-file-output=snyk-report.json --org=${{ inputs.snyk-org }} ${{ inputs.snyk-test-additional-params }}
-      - name: Report Snyk results to Kosli
-        run: kosli pipeline artifact report evidence generic ${{ needs.publish.outputs.image }} -e container-security-scan --sha256 ${{ needs.publish.outputs.sha256 }} -u snyk-report.json
-      - name: Login to ACR
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ inputs.container-registry-host }}
-          username: ${{ secrets.acr_publish_client_id }} # should we avoid secrets:inherit?
-          password: ${{ secrets.acr_publish_client_secret }}
-      - name: Snyk container test
-        run: snyk container test ${{ needs.publish.outputs.image }} --fail-on=patchable --json-file-output=snyk-container-report.json --org=${{ inputs.snyk-org }}
-      - name: Report Snyk results to Kosli
-        run: kosli pipeline artifact report evidence generic ${{ needs.publish.outputs.image }} -e code-security-scan --sha256 ${{ needs.publish.outputs.sha256 }} -u snyk-container-report.json
+    uses: stacc/github-workflow-actions/.github/workflows/snyk.yaml@main
   approval:
     needs: [publish, pull-request, npm, snyk, test]
     if: inputs.auto-approve == 'true'
