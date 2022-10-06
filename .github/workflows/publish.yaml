@@ -3,6 +3,12 @@ name: Publish new image
 on:
   release:
     types: [published, edited]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for release'
+        required: true
+        default: 'No reason given'
 
 concurrency:
   group: release-${{ github.ref }}-1
