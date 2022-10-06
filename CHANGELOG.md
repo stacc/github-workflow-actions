@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/stacc/github-workflow-actions/compare/v1.1.3...v1.1.4) (2022-10-06)
+
+
+### Bug Fixes
+
+* add manual publish ([d271707](https://github.com/stacc/github-workflow-actions/commit/d2717070d544cfa60d251c02013cd49a0c269dd4))
+
 ## [1.1.3](https://github.com/stacc/github-workflow-actions/compare/v1.1.2...v1.1.3) (2022-10-05)
 
 
