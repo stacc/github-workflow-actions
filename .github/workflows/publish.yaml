@@ -15,7 +15,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  junit-artifact-name: 'junit-test-results'
+  JUNIT_ARTIFACT_NAME: 'junit-test-results'
+
 jobs:
   test:
     name: Run tests
@@ -37,12 +38,12 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.junit-artifact-name }}
+          name: ${{ env.JUNIT_ARTIFACT_NAME }}
           path: test-results
   publish:
     uses: stacc/github-workflow-actions/.github/workflows/publish-image.yaml@main
     with:
       image: "stacc-reusable-workflows-demo"
       snyk-org: "team-roadies"
-      junit-artifact-name: ${{ env.junit-artifact-name }}
+      junit-artifact-name: ${{ env.JUNIT_ARTIFACT_NAME }}
     secrets: inherit
