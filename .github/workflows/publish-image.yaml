@@ -176,10 +176,10 @@ jobs:
       - name: Report deployment to registry in Kosli
         run: kosli pipeline deployment report ${{ inputs.container-registry-host }}/${{ inputs.image }}:${{ steps.meta.outputs.version }} --sha256 ${{ env.DIGEST }} -e ${{ inputs.kosli-environment }}
     outputs:
-        version: ${{ steps.meta.outputs.version }}
-        digest: ${{ steps.docker_build.outputs.digest }}
-        sha256: ${{ env.DIGEST }} # cleaner in subsequent jobs?
-        image: ${{ inputs.container-registry-host }}/${{ inputs.image }}:${{ steps.meta.outputs.version }} # output new image
+      version: ${{ steps.meta.outputs.version }}
+      digest: ${{ steps.docker_build.outputs.digest }}
+      sha256: ${{ env.DIGEST }} # cleaner in subsequent jobs?
+      image: ${{ inputs.container-registry-host }}/${{ inputs.image }}:${{ steps.meta.outputs.version }} # output new image
   pull-request:
     runs-on: ubuntu-latest
     needs: publish
