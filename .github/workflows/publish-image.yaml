@@ -1,5 +1,6 @@
 name: Build and publish artifact to container registry
 on:
+  workflow_dispatch:
   workflow_call:
     secrets:
       npm_token:
