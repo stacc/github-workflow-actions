@@ -1,6 +1,73 @@
 name: Build and publish artifact to container registry
 on:
   workflow_dispatch:
+    inputs:
+      image:
+        description: 'Image name'
+        required: true
+        type: string
+      container-registry-host:
+        description: 'Container registry'
+        required: false
+        default: 'stacc.azurecr.io'
+        type: string
+      helm-repo:
+        description: 'Helm repo'
+        required: false
+        default: 'stacc'
+        type: string
+      kosli-declare:
+        description: 'Declare Kosli pipeline'
+        required: false
+        default: 'pull-request,artifact,test,container-security-scan,code-security-scan'
+        type: string
+      kosli-pipeline:
+        description: 'Name of the Kosli pipeline. Will default to "inputs.image" if not set'
+        required: false
+        type: string
+      kosli-owner:
+        description: 'Name of the Kosli owner'
+        required: false
+        default: 'stacc'
+        type: string
+      kosli-host:
+        description: 'Name of the Kosli host'
+        required: false
+        default: 'https://stacc.kosli.com'
+        type: string
+      kosli-environment:
+        description: 'Name of the Kosli environment'
+        required: false
+        default: 'stacc-acr-registry'
+        type: string
+      kosli-environment-type:
+        description: 'Name of the Kosli environment-type'
+        required: false
+        default: 'server'
+        type: string
+      junit-artifact-name:
+        description: 'Name of artifact containing JUnit test results'
+        required: false
+        type: string
+      snyk-org:
+        description: 'Snyk organization. NOTE: Snyk calls a "team" an organization'
+        required: true
+        type: string
+      snyk-test-additional-params:
+        description: 'Additional parameters to pass to Snyk test'
+        required: false
+        default: ''
+        type: string
+      auto-approve:
+        description: 'Auto approve pipeline on the grounds of pull request?'
+        required: false
+        default: true
+        type: boolean
+      latest-branch:
+        description: 'Branch with last reported version. This gets pushed to by the workflow'
+        required: false
+        default: 'latest'
+        type: string
   workflow_call:
     secrets:
       npm_token:
@@ -53,8 +120,8 @@ on:
         required: false
         default: 'server'
         type: string
-      junit-result:
-        description: 'JUnit result converted to string'
+      junit-artifact-name:
+        description: 'Name of artifact containing JUnit test results'
         required: false
         type: string
       snyk-org:
