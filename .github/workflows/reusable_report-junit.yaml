@@ -2,9 +2,6 @@ name: Reusable workflow to provide evidence of a pull request
 
 on:
   workflow_call:
-    secrets:
-      github-token:
-        required: true
     inputs:
       name:
         description: 'Name of the artifact'

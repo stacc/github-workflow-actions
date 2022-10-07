@@ -9,7 +9,7 @@ on:
         required: true
       acr-password:
         required: true
-      azure_creds:
+      azure-creds:
         required: true
     inputs:
       version:
@@ -96,7 +96,7 @@ jobs:
       - name: Azure login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.azure_creds }}
+          creds: ${{ secrets.azure-creds }}
       - uses: azure/setup-helm@v3
         with:
           version: v3.6.3
