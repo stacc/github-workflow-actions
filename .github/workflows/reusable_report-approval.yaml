@@ -1,0 +1,42 @@
+name: Reusable workflow to provide evidence of approval
+
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        required: true
+    inputs:
+      name:
+        description: 'Name of the artifact'
+        required: true
+        type: string
+      kosli-pipeline:
+        description: 'Name of the Kosli pipeline'
+        required: true
+        type: string
+      sha256:
+        type: string
+        description: 'SHA256 of the published image'
+        required: true
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: stacc/github-workflow-actions/actions/setup-kosli@main
+        with:
+          kosli-pipeline: ${{ inputs.kosli-pipeline }}
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+      - name: Store approver data
+        run: |
+          echo '${{ steps.get_release.outputs.author }}' | jq > approver.json
+      - name: Report release approval to Kosli
+        run: kosli pipeline approval report ${{ inputs.name }} --description "Auto approval granted via Pull Request" --newest-commit ${{ github.sha }} --oldest-commit $(git rev-parse origin/${{inputs.latest-branch}}) --sha256 ${{ inputs.sha256 }} -u approver.json

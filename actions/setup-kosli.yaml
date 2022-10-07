@@ -1,0 +1,29 @@
+name: 'Setup Kosli'
+description: 'Installs and sets envs needed for Kosli'
+inputs:
+  kosli-pipeline:
+    description: 'Name of the Kosli pipeline. Will default to "inputs.image" if not set'
+    required: false
+    type: string
+  kosli-owner:
+    description: 'Name of the Kosli owner'
+    required: false
+    default: 'stacc'
+    type: string
+  kosli-host:
+    description: 'Name of the Kosli host'
+    required: false
+    default: 'https://stacc.kosli.com'
+    type: string
+runs:
+  using: "composite"
+  steps:
+    - name: Set envs
+      run: |
+        echo "Setting Kosli env vars"
+        echo "KOSLI_OWNER=${{ inputs.kosli-owner }}" >> $GITHUB_ENV
+        echo "KOSLI_HOST=${{ inputs.kosli-host }}" >> $GITHUB_ENV
+        echo "KOSLI_PIPELINE=${{ inputs.kosli-pipeline || inputs.image }}" >> $GITHUB_ENV
+        echo "KOSLI_API_TOKEN=${{ secrets.KOSLI_API_TOKEN }}" >> $GITHUB_ENV
+    - name: Setup kosli
+      uses: kosli-dev/setup-cli-action@v1

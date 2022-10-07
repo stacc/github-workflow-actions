@@ -1,0 +1,121 @@
+name: Reusable workflow to build and publish image to acr
+
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        required: true
+      acr-username:
+        required: true
+      acr-password:
+        required: true
+      azure_creds:
+        required: true
+    inputs:
+      version:
+        description: 'Version of the image to build'
+        required: true
+        type: string
+      image-name:
+        type: string
+        description: 'Name of the published image (with version)'
+        required: true
+      kosli-environment:
+        type: string
+        required: false
+        default: 'stacc-acr-registry'
+      acr-server:
+        type: string
+        required: false
+        default: 'stacc.azurecr.io'
+      helm-repo:
+        description: 'Helm repo'
+        required: false
+        default: 'stacc'
+        type: string
+      kosli-pipeline:
+        type: string
+        required: false
+        description: "Will fallback to image-name if not set"
+        default: ''
+    outputs:
+      version: ${{ jobs.publish.outputs.version}}
+      digest: ${{ jobs.publish.outputs.digest}}
+      sha256: ${ jobs.publish.outputs.sha256s }}
+      image: ${{ jobs.publish.outputs.image }}
+      name: ${{ jobs.publish.outputs.name }}
+      pipeline: ${{ jobs.publish.outputs.pipeline }}
+
+jobs:
+  publish:
+    needs: initialize
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set pipeline
+        id: set-pipeline
+        run: |
+          echo "::set-output name=pipeline::${{ inputs.kosli-pipeline || inputs.image-name }}"
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: stacc/github-workflow-actions/actions/setup-kosli@main
+        with:
+          kosli-pipeline: ${{ steps.set-pipeline.outputs.pipeline }}
+      - uses: docker/metadata-action@v4
+        id: meta
+        with:
+          tags: type=semver,pattern={{version}},value=${{inputs.version}}
+          images: ${{ inputs.acr-server}}/${{ inputs.image-name }}
+      - name: Docker Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.acr-server }}
+          username: ${{ secrets.acr-username }}
+          password: ${{ secrets.acr-password }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Make the image digest available
+        id: digest-prep
+        #Might need "" around the sets
+        run: |
+          ARTIFACT_SHA=$( echo ${{ steps.docker_build.outputs.digest }} | sed 's/.*://')
+          echo "DIGEST=$ARTIFACT_SHA" >> ${GITHUB_ENV}
+          echo ::set-output name=image-digest::${ARTIFACT_SHA}
+          echo ::set-output name=image::${{ inputs.acr-server }}/${{ inputs.image-name }}:${{ steps.meta.outputs.version }}
+          echo ::set-output name=name::${{ inputs.acr-server }}/${{ inputs.image-name }}
+      - name: Report Docker image in Kosli
+        run: |
+          kosli pipeline artifact report creation ${{ steps.digest-prep.outputs.name }} --sha256 ${{ env.DIGEST }}
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.azure_creds }}
+      - uses: azure/setup-helm@v3
+        with:
+          version: v3.6.3
+          token: ${{ secrets.github-token }}
+        id: install-helm
+      - name: Init helm
+        run: az acr helm repo add -n ${{ inputs.helm-repo }}
+      - name: Package helm chart
+        run: helm package --version "${{ steps.meta.outputs.version }}" --app-version "${{ steps.meta.outputs.version}}" helm
+      - name: Push helm chart
+        run: |
+          az acr helm push -n ${{ inputs.helm-repo}} ${{ inputs.image-name}}-*.tgz
+      - name: Report deployment to registry in Kosli
+        run: kosli pipeline deployment report ${{ steps.digest-prep.outputs.name }} --sha256 ${{ env.DIGEST }} -e ${{ inputs.kosli-environment }} -p ${{ steps.set-pipeline.outputs.pipeline }}
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      digest: ${{ steps.docker_build.outputs.digest }}
+      sha256: ${{ env.DIGEST }}
+      image: ${{ steps.digest-prep.outputs.image }}
+      name: ${{ steps.digest-prep.outputs.name }}
+      pipeline: ${{ steps.set-pipeline.outputs.pipeline }}
+
