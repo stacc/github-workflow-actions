@@ -1,0 +1,62 @@
+name: Reusable workflow for snyk test and container-test with kosli reporting
+on:
+  workflow_call:
+    secrets:
+      acr-username:
+        required: true
+      acr-password:
+        required: true
+      kosli-token:
+        required: true
+    inputs:
+      name:
+        description: 'Name of the artifact'
+        required: true
+        type: string
+      sha256:
+        type: string
+        required: true
+      snyk-org:
+        type: string
+        description: 'Snyk organization. NOTE: Snyk calls a "team" an organization'
+        required: true
+      kosli-pipeline:
+        type: string
+        required: true
+      snyk-test-additional-params:
+        type: string
+        description: 'Additional parameters to pass to Snyk test'
+        required: false
+        default: ''
+      acr-server:
+        type: string
+        required: false
+        default: 'stacc.azurecr.io'
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: stacc/github-workflow-actions/actions/setup-kosli@main
+        with:
+          kosli-pipeline: ${{ inputs.kosli-pipeline }}
+          kosli-token: ${{ secrets.kosli-token }}
+      - uses: snyk/actions/setup@master
+      - name: Snyk dependencys test
+        run: snyk test --fail-on=patchable --prune-repeated-subdependencies --json-file-output=snyk-report.json --org=${{ inputs.snyk-org }} ${{ inputs.snyk-test-additional-params }}
+      - name: Report Snyk results to Kosli
+        run: kosli pipeline artifact report evidence generic ${{ inputs.name }} -e container-security-scan --sha256 ${{ inputs.sha256 }} -u snyk-report.json
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.acr-server }}
+          username: ${{ secrets.acr_username }}
+          password: ${{ secrets.acr_password }}
+      - name: Snyk container test
+        run: snyk container test ${{ inputs.name }} --fail-on=patchable --json-file-output=snyk-container-report.json --org=${{ inputs.snyk-org }}
+      - name: Report Snyk results to Kosli
+        run: kosli pipeline artifact report evidence generic ${{ inputs.name }} -e code-security-scan --sha256 ${{ inputs.sha256 }} -u snyk-container-report.json
