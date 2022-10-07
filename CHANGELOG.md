@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/stacc/github-workflow-actions/compare/v1.1.4...v1.2.0) (2022-10-07)
+
+
+### Features
+
+* split everything into pieces ([d75fbdf](https://github.com/stacc/github-workflow-actions/commit/d75fbdff0085da4766f2bf06318049560b4b0e21))
+
 ## [1.1.4](https://github.com/stacc/github-workflow-actions/compare/v1.1.3...v1.1.4) (2022-10-06)
 
 
