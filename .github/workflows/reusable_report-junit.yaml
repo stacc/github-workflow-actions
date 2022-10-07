@@ -2,6 +2,9 @@ name: Reusable workflow to provide evidence of a pull request
 
 on:
   workflow_call:
+    secrets:
+      kosli-token:
+        required: true
     inputs:
       name:
         description: 'Name of the artifact'
@@ -26,6 +29,7 @@ jobs:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
         with:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
+          kosli-token: ${{ secrets.kosli-token }}
       - uses: actions/download-artifact@v3
         id: download-artifact
         with:

@@ -6,6 +6,8 @@ on:
         required: true
       acr-password:
         required: true
+      kosli-token:
+        required: true
     inputs:
       name:
         description: 'Name of the artifact'
@@ -42,6 +44,7 @@ jobs:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
         with:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
+          kosli-token: ${{ secrets.kosli-token }}
       - uses: snyk/actions/setup@master
       - name: Snyk dependencys test
         run: snyk test --fail-on=patchable --prune-repeated-subdependencies --json-file-output=snyk-report.json --org=${{ inputs.snyk-org }} ${{ inputs.snyk-test-additional-params }}

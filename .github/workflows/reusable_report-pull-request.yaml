@@ -5,6 +5,8 @@ on:
     secrets:
       github-token:
         required: true
+      kosli-token:
+        required: true
     inputs:
       name:
         description: 'Name of the artifact'
@@ -25,6 +27,7 @@ jobs:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
         with:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
+          kosli-token: ${{ secrets.kosli-token }}
       - name: Report pull request
         run: |
           kosli pipeline artifact report evidence github-pullrequest "${{ input.name }}" --github-token ${{ secrets.github-token }} --sha256 ${{ inputs.sha256 }} --evidence-type pull-request

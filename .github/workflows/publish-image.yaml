@@ -3,13 +3,15 @@ on:
   workflow_call:
     secrets:
       github-token:
-          required: true
+        required: true
       acr-username:
-          required: true
+        required: true
       acr-password:
-          required: true
+        required: true
       azure_creds:
-          required: true
+        required: true
+      kosli-token:
+        required: true
     inputs:
       version:
         description: 'Version of the artifact'
@@ -80,6 +82,7 @@ jobs:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
         with:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
+          kosli-token: ${{ secrets.kosli-token }}
       - name: Declare Kosli pipeline
         run: kosli pipeline declare --template ${{inputs.kosli-declare}}
       - name: Create environment in Kosli
@@ -92,6 +95,7 @@ jobs:
       image-name: ${{ inputs.image-name }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
     secrets:
+      kosli-token: ${{ secrets.kosli-token }}
       github-token: ${{ secrets.github-token }}
 
   pull-request:
@@ -106,6 +110,7 @@ jobs:
       acr-username: ${{ secrets.acr_publish_client_id  }}
       acr-password: ${{ secrets.acr_publish_client_secret }}
       azure_creds: ${{ secrets.stacc_acr_sdk_auth }}
+      kosli-token: ${{ secrets.kosli-token }}
   test:
     needs: publish
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-junit.yaml@main
@@ -114,6 +119,8 @@ jobs:
       sha256: ${{ steps.publish.outputs.sha256 }}
       junit-artifact-name: ${{ inputs.junit-artifact-name }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
+    secrets:
+      kosli-token: ${{ secrets.kosli-token }}
   snyk:
     uses: stacc/github-workflow-actions/.github/workflows/snyk.yaml@main
     with:
@@ -122,6 +129,7 @@ jobs:
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       snyk-org: ${{ inputs.snyk-org }}
     secrets:
+      kosli-token: ${{ secrets.kosli-token }}
       acr-username: ${{ secrets.acr_publish_client_id  }}
       acr-password: ${{ secrets.acr_publish_client_secret }}
   approval:
@@ -134,6 +142,8 @@ jobs:
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
     secrets:
       github-token: ${{ secrets.github-token }}
+      kosli-token: ${{ secrets.kosli-token }}
+
   update-latest:
     needs: approval
     runs-on: ubuntu-latest

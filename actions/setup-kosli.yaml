@@ -15,6 +15,10 @@ inputs:
     required: false
     default: 'https://stacc.kosli.com'
     type: string
+  kosli-token:
+    description: 'Api token'
+    required: true
+    type: string
 runs:
   using: "composite"
   steps:
@@ -23,7 +27,7 @@ runs:
         echo "Setting Kosli env vars"
         echo "KOSLI_OWNER=${{ inputs.kosli-owner }}" >> $GITHUB_ENV
         echo "KOSLI_HOST=${{ inputs.kosli-host }}" >> $GITHUB_ENV
-        echo "KOSLI_PIPELINE=${{ inputs.kosli-pipeline || inputs.image }}" >> $GITHUB_ENV
-        echo "KOSLI_API_TOKEN=${{ secrets.KOSLI_API_TOKEN }}" >> $GITHUB_ENV
+        echo "KOSLI_PIPELINE=${{ inputs.kosli-pipeline }}" >> $GITHUB_ENV
+        echo "KOSLI_API_TOKEN=${{ inputs.kosli-token }}" >> $GITHUB_ENV
     - name: Setup kosli
       uses: kosli-dev/setup-cli-action@v1
