@@ -122,7 +122,7 @@ jobs:
     secrets:
       kosli-token: ${{ secrets.kosli-token }}
   snyk:
-    uses: stacc/github-workflow-actions/.github/workflows/snyk.yaml@main
+    uses: stacc/github-workflow-actions/.github/workflows/reusable_report-snyk.yaml@main
     with:
       name: ${{ steps.publish.outputs.name }}
       sha256: ${{ steps.publish.outputs.sha256 }}
