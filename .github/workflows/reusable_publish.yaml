@@ -26,11 +26,6 @@ on:
         type: string
         description: 'Name of the published image (with version)'
         required: true
-      helm-context:
-        description: 'Where can we find the helm chart?'
-        required: false
-        default: 'helm'
-        type: string
       kosli-environment:
         type: string
         required: false
@@ -39,11 +34,6 @@ on:
         type: string
         required: false
         default: 'stacc.azurecr.io'
-      helm-repo:
-        description: 'Helm repo'
-        required: false
-        default: 'stacc'
-        type: string
       kosli-pipeline:
         type: string
         required: false
@@ -126,24 +116,7 @@ jobs:
       - name: Report Docker image in Kosli
         run: |
           kosli pipeline artifact report creation ${{ steps.digest-prep.outputs.name }} --sha256 ${{ env.DIGEST }}
-      - name: Azure login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.azure-creds }}
-      - uses: azure/setup-helm@v3
-        with:
-          version: v3.6.3
-          token: ${{ secrets.github-token }}
-        id: install-helm
-      - name: Init helm
-        run: az acr helm repo add -n ${{ inputs.helm-repo }}
-      - name: Package helm chart
-        run: helm package --version "${{ steps.meta.outputs.version }}" --app-version "${{ steps.meta.outputs.version}}" ${{ inputs.helm-context }}
-      - name: Push helm chart
-        run: |
-          az acr helm push -n ${{ inputs.helm-repo}} ${{ inputs.image-name}}-*.tgz
-      - name: Report deployment to registry in Kosli
-        run: kosli pipeline deployment report ${{ steps.digest-prep.outputs.name }} --sha256 ${{ env.DIGEST }} -e ${{ inputs.kosli-environment }} -p ${{ steps.set-pipeline.outputs.pipeline }}
+
     outputs:
       version: ${{ steps.meta.outputs.version }}
       digest: ${{ steps.docker_build.outputs.digest }}

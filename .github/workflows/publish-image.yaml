@@ -27,11 +27,21 @@ on:
         description: 'Image name without acr and version (e.g. "services-sms")'
         required: true
         type: string
+      helm-repo:
+        description: 'Helm repo to publish to'
+        required: false
+        type: string
+        default: 'stacc'
       helm-context:
         description: 'Where can we find the helm chart?'
         required: false
         default: 'helm'
         type: string
+      should-helm-push:
+        description: 'Should we push to helm?'
+        required: false
+        default: true
+        type: boolean
       kosli-pipeline:
         description: 'Name of the Kosli pipeline'
         required: true
@@ -125,7 +135,6 @@ jobs:
       image-name: ${{ inputs.image-name }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       docker-file-context: ${{ inputs.docker-file-context }}
-      helm-context: ${{ inputs.helm-context }}
     secrets:
       acr-username: ${{ secrets.acr-username }}
       acr-password: ${{ secrets.acr-password }}
@@ -134,6 +143,18 @@ jobs:
       github-token: ${{ secrets.github-token }}
       flow-jfrog-username: ${{ secrets.flow-jfrog-username }}
       flow-jfrog-token: ${{ secrets.flow-jfrog-token }}
+  helm:
+    needs: publish
+    if: ${{ inputs.should-helm-push }}
+    uses: stacc/github-workflow-actions/.github/workflows/reusable_helm.yaml@main
+    secrets:
+      github-token: ${{ secrets.github-token }}
+      azure-creds: ${{ secrets.azure-creds }}
+    with:
+      context: ${{ inputs.helm-context }}
+      helm-repo: ${{ inputs.helm-repo }}
+      version: ${{ inputs.version }}
+      image-name: ${{ inputs.image-name }}
   pull-request:
     needs: publish
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-pull-request.yaml@main

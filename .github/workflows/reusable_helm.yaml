@@ -1,0 +1,53 @@
+name: Helm package and push
+
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        required: true
+      azure-creds:
+        required: true
+    inputs:
+      version:
+        description: 'version of the artifact'
+        required: true
+        type: string
+      helm-repo:
+        description: 'Helm repo'
+        required: false
+        default: 'stacc'
+        type: string
+      image-name:
+        type: string
+        description: 'SHA256 of the published image'
+        required: true
+      context:
+        type: string
+        description: 'Where to located the chart'
+        required: false
+        default: 'helm'
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.azure-creds }}
+      - uses: azure/setup-helm@v3
+        with:
+          version: v3.6.3
+          token: ${{ secrets.github-token }}
+        id: install-helm
+      - name: Init helm
+        run: az acr helm repo add -n ${{ inputs.helm-repo }}
+      - name: Package helm chart
+        run: helm package --version "${{ inputs.version }}" --app-version "${{ inputs.version}}" ${{ inputs.context }}
+      - name: Push helm chart
+        run: |
+          az acr helm push -n ${{ inputs.helm-repo}} ${{ inputs.image-name}}-*.tgz
