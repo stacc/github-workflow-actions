@@ -8,6 +8,10 @@ on:
         required: true
       acr-password:
         required: true
+      flow-jfrog-username:
+        required: true
+      flow-jfrog-token:
+        required: true
       azure-creds:
         required: true
       kosli-token:
@@ -128,6 +132,8 @@ jobs:
       azure-creds: ${{ secrets.azure-creds }}
       kosli-token: ${{ secrets.kosli-token }}
       github-token: ${{ secrets.github-token }}
+      flow-jfrog-username: ${{ secrets.flow-jfrog-username }}
+      flow-jfrog-token: ${{ secrets.flow-jfrog-token }}
   pull-request:
     needs: publish
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-pull-request.yaml@main

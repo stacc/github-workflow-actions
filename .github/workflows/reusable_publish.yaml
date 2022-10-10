@@ -9,6 +9,10 @@ on:
         required: true
       acr-password:
         required: true
+      flow-jfrog-username:
+        required: true
+      flow-jfrog-token:
+        required: true
       azure-creds:
         required: true
       kosli-token:
@@ -90,6 +94,12 @@ jobs:
         with:
           tags: type=semver,pattern={{version}},value=${{inputs.version}}
           images: ${{ inputs.acr-server}}/${{ inputs.image-name }}
+      - name: JFrog Login (needed for Flow builder)
+        uses: azure/docker-login@v1
+        with:
+          login-server: stacc-docker.jfrog.io
+          username: ${{ secrets.flow-jfrog-username }}
+          password: ${{ secrets.flow-jfrog-token }}
       - name: Docker Login
         uses: azure/docker-login@v1
         with:
