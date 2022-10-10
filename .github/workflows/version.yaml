@@ -12,6 +12,10 @@ on:
         description: 'Slack webhook for release bot'
         required: false
     inputs:
+      name:
+        description: 'Name of the artifact. Fallback to package.json name'
+        required: false
+        type: string
       branches: #Branches to release on
         description: 'Branches to release on'
         type: string
@@ -96,4 +100,5 @@ jobs:
           COMMIT_CHANGE_LOG: ${{ inputs.commit-changelog }}
           SLACK_WEBHOOK: ${{ secrets.slack_release_bot_webhook }}
           SLACK_CHANNEL: ${{ inputs.slack-channel }}
+          SEMANTIC_RELEASE_PACKAGE: ${{ inputs.name }}
 
