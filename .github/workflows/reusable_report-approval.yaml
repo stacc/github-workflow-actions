@@ -25,6 +25,10 @@ jobs:
   pull-request:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
         with:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
