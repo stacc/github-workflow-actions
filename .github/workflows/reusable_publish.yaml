@@ -72,7 +72,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: stacc/github-workflow-actions/actions/setup-kosli@main
+      - uses: stacc/github-workflow-actions/actions/setup-kosli.yaml@main
         with:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
           kosli-token: ${{ secrets.kosli-token }}
