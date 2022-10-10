@@ -55,6 +55,11 @@ on:
         required: false
         default: 'latest'
         type: string
+      docker-file-context:
+        description: 'Context for docker build'
+        required: false
+        default: '.'
+        type: string
     outputs:
       version:
         value: ${{ jobs.publish.outputs.version }}
@@ -110,6 +115,7 @@ jobs:
       version: ${{ inputs.version }}
       image-name: ${{ inputs.image-name }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
+      docker-file-context: ${{ inputs.docker-file-context }}
     secrets:
       acr-username: ${{ secrets.acr-username }}
       acr-password: ${{ secrets.acr-password }}
@@ -161,13 +167,3 @@ jobs:
     secrets:
       github-token: ${{ secrets.github-token }}
       kosli-token: ${{ secrets.kosli-token }}
-  update-latest:
-    needs: approval
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Mark latest release as using git branch
-        run: git branch --force ${{inputs.latest-branch}} ${{ github.sha }} && git push origin ${{inputs.latest-branch}}

@@ -40,6 +40,10 @@ on:
         required: false
         description: "Will fallback to image-name if not set"
         default: ''
+      docker-file-context:
+        type: string
+        required: false
+        default: '.'
     outputs:
       version:
         value: ${{ jobs.publish.outputs.version }}
@@ -91,7 +95,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ${{ inputs.docker-file-context }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
