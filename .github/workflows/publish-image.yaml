@@ -95,7 +95,7 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - uses: stacc/github-workflow-actions/actions/setup-kosli.yaml@main
+      - uses: stacc/github-workflow-actions/actions/setup-kosli@main
         with:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
           kosli-token: ${{ secrets.kosli-token }}
