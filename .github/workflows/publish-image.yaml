@@ -97,7 +97,6 @@ jobs:
     secrets:
       kosli-token: ${{ secrets.kosli-token }}
       github-token: ${{ secrets.github-token }}
-
   pull-request:
     needs: publish
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-pull-request.yaml@main
@@ -113,6 +112,7 @@ jobs:
       kosli-token: ${{ secrets.kosli-token }}
   test:
     needs: publish
+    if: inputs.junit-artifact-name != ''
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-junit.yaml@main
     with:
       name: ${{ steps.publish.outputs.name }}
@@ -143,7 +143,6 @@ jobs:
     secrets:
       github-token: ${{ secrets.github-token }}
       kosli-token: ${{ secrets.kosli-token }}
-
   update-latest:
     needs: approval
     runs-on: ubuntu-latest
