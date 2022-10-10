@@ -41,12 +41,24 @@ on:
         description: "Will fallback to image-name if not set"
         default: ''
     outputs:
-      version: ${{ jobs.publish.outputs.version}}
-      digest: ${{ jobs.publish.outputs.digest}}
-      sha256: ${ jobs.publish.outputs.sha256s }}
-      image: ${{ jobs.publish.outputs.image }}
-      name: ${{ jobs.publish.outputs.name }}
-      pipeline: ${{ jobs.publish.outputs.pipeline }}
+      version:
+        value: ${{ jobs.publish.outputs.version }}
+        description: "Outputs new version"
+      digest:
+        value: ${{ jobs.publish.outputs.digest }}
+        description: "Outputs new digest"
+      sha256:
+        value: ${{ jobs.publish.outputs.sha256 }}
+        description: "Outputs new sha256"
+      image:
+        value: ${{ jobs.publish.outputs.image }}
+        description: "Outputs new image"
+      name:
+        value: ${{ jobs.publish.outputs.name }}
+        description: "Outputs new name"
+      pipeline:
+        value: ${{ jobs.publish.outputs.pipeline }}
+        description: "Outputs name of pipeline"
 
 jobs:
   publish:

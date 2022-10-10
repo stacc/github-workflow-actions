@@ -23,6 +23,10 @@ on:
         description: 'Image name without acr and version (e.g. "services-sms")'
         required: true
         type: string
+      kosli-pipeline:
+        description: 'Name of the Kosli pipeline'
+        required: true
+        type: string
       kosli-declare:
         description: 'Declare Kosli pipeline'
         required: false
@@ -52,11 +56,21 @@ on:
         default: 'latest'
         type: string
     outputs:
-      version: ${{ jobs.publish.outputs.version }}
-      digest: ${{ jobs.publish.outputs.digest }}
-      sha256: ${{ jobs.publish.outputs.sha256 }}
-      image: ${{ jobs.publish.outputs.image }} # output new artifact path with version
-      name: ${{ jobs.publish.outputs.name }} # output new artifact "path" (no version)
+      version:
+        value: ${{ jobs.publish.outputs.version }}
+        description: "Outputs new version"
+      digest:
+        value: ${{ jobs.publish.outputs.digest }}
+        description: "Outputs new digest"
+      sha256:
+        value: ${{ jobs.publish.outputs.sha256 }}
+        description: "Outputs new sha256"
+      image:
+        value: ${{ jobs.publish.outputs.image }}
+        description: "Outputs new image"
+      name:
+        value: ${{ jobs.publish.outputs.name }}
+        description: "Outputs new name"
 
 jobs:
   validate:
