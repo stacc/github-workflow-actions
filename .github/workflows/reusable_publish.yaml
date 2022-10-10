@@ -62,7 +62,6 @@ on:
 
 jobs:
   publish:
-    needs: initialize
     runs-on: ubuntu-latest
     steps:
       - name: Set pipeline
