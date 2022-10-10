@@ -194,8 +194,8 @@ jobs:
       sha256: ${{ needs.publish.outputs.sha256 }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       snyk-org: ${{ inputs.snyk-org }}
+      snyk-working-directory: ${{ inputs.snyk-working-directory }}
       snyk-test-additional-params: ${{ inputs.snyk-test-additional-params }}
-      working-directory: ${{ inputs.snyk-working-directory }}
     secrets:
       kosli-token: ${{ secrets.kosli-token }}
       acr-username: ${{ secrets.acr-username }}
