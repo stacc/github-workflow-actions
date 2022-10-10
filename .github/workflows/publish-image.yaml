@@ -117,8 +117,8 @@ jobs:
     needs: publish
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-pull-request.yaml@main
     with:
-      name: ${{ steps.publish.outputs.name }}
-      sha256: ${{ steps.publish.outputs.sha256 }}
+      name: ${{ needs.publish.outputs.name }}
+      sha256: ${{ needs.publish.outputs.sha256 }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
     secrets:
       github-token: ${{ secrets.github-token }}
@@ -131,8 +131,8 @@ jobs:
     if: inputs.junit-artifact-name != ''
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-junit.yaml@main
     with:
-      name: ${{ steps.publish.outputs.name }}
-      sha256: ${{ steps.publish.outputs.sha256 }}
+      name: ${{ needs.publish.outputs.name }}
+      sha256: ${{ needs.publish.outputs.sha256 }}
       junit-artifact-name: ${{ inputs.junit-artifact-name }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
     secrets:
@@ -140,8 +140,8 @@ jobs:
   snyk:
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-snyk.yaml@main
     with:
-      name: ${{ steps.publish.outputs.name }}
-      sha256: ${{ steps.publish.outputs.sha256 }}
+      name: ${{ needs.publish.outputs.name }}
+      sha256: ${{ needs.publish.outputs.sha256 }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       snyk-org: ${{ inputs.snyk-org }}
     secrets:
@@ -154,8 +154,8 @@ jobs:
     if: inputs.auto-approve == 'true'
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-approval.yaml@main
     with:
-      name: ${{ steps.publish.outputs.name }}
-      sha256: ${{ steps.publish.outputs.sha256 }}
+      name: ${{ needs.publish.outputs.name }}
+      sha256: ${{ needs.publish.outputs.sha256 }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
     secrets:
       github-token: ${{ secrets.github-token }}
