@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/stacc/github-workflow-actions/compare/v1.2.0...v1.3.0) (2022-10-10)
+
+
+### Features
+
+* **snyk:** pass secret token to workflow ([b10fa61](https://github.com/stacc/github-workflow-actions/commit/b10fa6108ba1fb4201818a3101e64c865937d603))
+
 # [1.2.0](https://github.com/stacc/github-workflow-actions/compare/v1.1.4...v1.2.0) (2022-10-07)
 
 
