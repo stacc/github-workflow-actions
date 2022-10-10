@@ -28,7 +28,7 @@ on:
         default: 'helm'
 
 jobs:
-  pull-request:
+  helm:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
