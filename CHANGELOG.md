@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/stacc/github-workflow-actions/compare/v1.3.1...v1.4.0) (2022-10-10)
+
+
+### Features
+
+* **publish:** split helm and report deployment into own reusable ([1b13208](https://github.com/stacc/github-workflow-actions/commit/1b132085bcdee9d43fa49b94da1322fea77d8a11))
+
 ## [1.3.1](https://github.com/stacc/github-workflow-actions/compare/v1.3.0...v1.3.1) (2022-10-10)
 
 
