@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/stacc/github-workflow-actions/compare/v1.4.0...v1.4.1) (2022-10-10)
+
+
+### Bug Fixes
+
+* **snyk:** allow working directory input ([ea5fe0e](https://github.com/stacc/github-workflow-actions/commit/ea5fe0e040547ee8badbce8c815eabe7f4c43062))
+
 # [1.4.0](https://github.com/stacc/github-workflow-actions/compare/v1.3.1...v1.4.0) (2022-10-10)
 
 
