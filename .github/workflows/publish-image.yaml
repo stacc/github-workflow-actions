@@ -138,6 +138,7 @@ jobs:
     secrets:
       kosli-token: ${{ secrets.kosli-token }}
   snyk:
+    needs: publish
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-snyk.yaml@main
     with:
       name: ${{ needs.publish.outputs.name }}
