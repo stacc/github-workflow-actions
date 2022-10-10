@@ -23,6 +23,7 @@ runs:
   using: "composite"
   steps:
     - name: Set envs
+      shell: bash
       run: |
         echo "Setting Kosli env vars"
         echo "KOSLI_OWNER=${{ inputs.kosli-owner }}" >> $GITHUB_ENV
