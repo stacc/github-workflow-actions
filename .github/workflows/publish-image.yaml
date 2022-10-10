@@ -8,7 +8,7 @@ on:
         required: true
       acr-password:
         required: true
-      azure_creds:
+      azure-creds:
         required: true
       kosli-token:
         required: true
@@ -111,6 +111,9 @@ jobs:
       image-name: ${{ inputs.image-name }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
     secrets:
+      acr-username: ${{ secrets.acr-username }}
+      acr-password: ${{ secrets.acr-password }}
+      azure-creds: ${{ secrets.azure-creds }}
       kosli-token: ${{ secrets.kosli-token }}
       github-token: ${{ secrets.github-token }}
   pull-request:
@@ -122,9 +125,6 @@ jobs:
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
     secrets:
       github-token: ${{ secrets.github-token }}
-      acr-username: ${{ secrets.acr_publish_client_id  }}
-      acr-password: ${{ secrets.acr_publish_client_secret }}
-      azure_creds: ${{ secrets.stacc_acr_sdk_auth }}
       kosli-token: ${{ secrets.kosli-token }}
   test:
     needs: publish
@@ -146,8 +146,8 @@ jobs:
       snyk-org: ${{ inputs.snyk-org }}
     secrets:
       kosli-token: ${{ secrets.kosli-token }}
-      acr-username: ${{ secrets.acr_publish_client_id  }}
-      acr-password: ${{ secrets.acr_publish_client_secret }}
+      acr-username: ${{ secrets.acr-username }}
+      acr-password: ${{ secrets.acr-password }}
       snyk-token: ${{ secrets.snyk-token }}
   approval:
     needs: [publish, pull-request, snyk, test]
