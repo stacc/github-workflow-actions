@@ -48,6 +48,8 @@ jobs:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
           kosli-token: ${{ secrets.kosli-token }}
       - uses: snyk/actions/setup@master
+      - name: Authenticate to Snyk
+        run: snyk auth ${{ secrets.snyk-token }}
       - name: Snyk dependencys test
         run: snyk test --fail-on=patchable --prune-repeated-subdependencies --json-file-output=snyk-report.json --org=${{ inputs.snyk-org }} ${{ inputs.snyk-test-additional-params }}
       - name: Report Snyk results to Kosli
@@ -58,8 +60,6 @@ jobs:
           login-server: ${{ inputs.acr-server }}
           username: ${{ secrets.acr_username }}
           password: ${{ secrets.acr_password }}
-      - name: Authenticate to Snyk
-        run: snyk auth ${{ secrets.snyk-token }}
       - name: Snyk container test
         run: snyk container test ${{ inputs.name }} --fail-on=patchable --json-file-output=snyk-container-report.json --org=${{ inputs.snyk-org }}
       - name: Report Snyk results to Kosli
