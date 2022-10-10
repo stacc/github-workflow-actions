@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/stacc/github-workflow-actions/compare/v1.3.0...v1.3.1) (2022-10-10)
+
+
+### Bug Fixes
+
+* syntax for outputs ([67889ff](https://github.com/stacc/github-workflow-actions/commit/67889ff53c09f8ed217ae27695362d4ff94352fc))
+
 # [1.3.0](https://github.com/stacc/github-workflow-actions/compare/v1.2.0...v1.3.0) (2022-10-10)
 
 
