@@ -34,9 +34,17 @@ on:
         type: string
         required: false
         default: 'stacc.azurecr.io'
+      working-directory:
+        type: string
+        required: false
+        default: '.'
 
 jobs:
   snyk:
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working-directory }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

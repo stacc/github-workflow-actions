@@ -74,6 +74,11 @@ on:
         description: 'Additional parameters to pass to Snyk test'
         required: false
         default: ''
+      snyk-working-directory:
+        type: string
+        description: 'Where to run Snyk test'
+        required: false
+        default: '.'
       latest-branch:
         description: 'Branch with last reported version. This gets pushed to by the workflow'
         required: false
