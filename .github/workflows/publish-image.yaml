@@ -12,6 +12,8 @@ on:
         required: true
       kosli-token:
         required: true
+      snyk-token:
+        required: true
     inputs:
       version:
         description: 'Version of the artifact'
@@ -132,6 +134,7 @@ jobs:
       kosli-token: ${{ secrets.kosli-token }}
       acr-username: ${{ secrets.acr_publish_client_id  }}
       acr-password: ${{ secrets.acr_publish_client_secret }}
+      snyk-token: ${{ secrets.snyk-token }}
   approval:
     needs: [publish, pull-request, snyk, test]
     if: inputs.auto-approve == 'true'

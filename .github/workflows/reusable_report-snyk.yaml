@@ -8,6 +8,8 @@ on:
         required: true
       kosli-token:
         required: true
+      snyk-token:
+        required: true
     inputs:
       name:
         description: 'Name of the artifact'
@@ -56,6 +58,8 @@ jobs:
           login-server: ${{ inputs.acr-server }}
           username: ${{ secrets.acr_username }}
           password: ${{ secrets.acr_password }}
+      - name: Authenticate to Snyk
+        run: snyk auth ${{ secrets.snyk-token }}
       - name: Snyk container test
         run: snyk container test ${{ inputs.name }} --fail-on=patchable --json-file-output=snyk-container-report.json --org=${{ inputs.snyk-org }}
       - name: Report Snyk results to Kosli
