@@ -195,6 +195,7 @@ jobs:
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       snyk-org: ${{ inputs.snyk-org }}
       snyk-test-additional-params: ${{ inputs.snyk-test-additional-params }}
+      working-directory: ${{ inputs.snyk-working-directory }}
     secrets:
       kosli-token: ${{ secrets.kosli-token }}
       acr-username: ${{ secrets.acr-username }}
