@@ -60,14 +60,17 @@ jobs:
         run: snyk auth ${{ secrets.snyk-token }}
       - name: Snyk dependencys test
         run: snyk test --fail-on=patchable --prune-repeated-subdependencies --json-file-output=snyk-report.json --org=${{ inputs.snyk-org }} ${{ inputs.snyk-test-additional-params }}
+      - name: Convert to single root json
+        run: |
+          jq '{"root": .}' <<< cat snyk-report.json >> results.json
       - name: Report Snyk results to Kosli
-        run: kosli pipeline artifact report evidence generic ${{ inputs.name }} -e container-security-scan --sha256 ${{ inputs.sha256 }} -u snyk-report.json
+        run: kosli pipeline artifact report evidence generic ${{ inputs.name }} -e container-security-scan --sha256 ${{ inputs.sha256 }} -u results.json
       - name: Login to ACR
         uses: azure/docker-login@v1
         with:
           login-server: ${{ inputs.acr-server }}
-          username: ${{ secrets.acr_username }}
-          password: ${{ secrets.acr_password }}
+          username: ${{ secrets.acr-username }}
+          password: ${{ secrets.acr-password }}
       - name: Snyk container test
         run: snyk container test ${{ inputs.name }} --fail-on=patchable --json-file-output=snyk-container-report.json --org=${{ inputs.snyk-org }}
       - name: Report Snyk results to Kosli
