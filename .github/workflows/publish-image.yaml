@@ -69,6 +69,11 @@ on:
         description: 'Snyk organization. NOTE: Snyk calls a "team" an organization'
         required: true
         type: string
+      snyk-test-additional-params:
+        type: string
+        description: 'Additional parameters to pass to Snyk test'
+        required: false
+        default: ''
       latest-branch:
         description: 'Branch with last reported version. This gets pushed to by the workflow'
         required: false
@@ -184,6 +189,7 @@ jobs:
       sha256: ${{ needs.publish.outputs.sha256 }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       snyk-org: ${{ inputs.snyk-org }}
+      snyk-test-additional-params: ${{ inputs.snyk-test-additional-params }}
     secrets:
       kosli-token: ${{ secrets.kosli-token }}
       acr-username: ${{ secrets.acr-username }}
