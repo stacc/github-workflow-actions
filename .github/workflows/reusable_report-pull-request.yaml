@@ -30,4 +30,4 @@ jobs:
           kosli-token: ${{ secrets.kosli-token }}
       - name: Report pull request
         run: |
-          kosli pipeline artifact report evidence github-pullrequest "${{ input.name }}" --github-token ${{ secrets.github-token }} --sha256 ${{ inputs.sha256 }} --evidence-type pull-request
+          kosli pipeline artifact report evidence github-pullrequest "${{ inputs.name }}" --github-token ${{ secrets.github-token }} --sha256 ${{ inputs.sha256 }} --evidence-type pull-request
