@@ -23,6 +23,11 @@ on:
         description: 'Image name without acr and version (e.g. "services-sms")'
         required: true
         type: string
+      helm-context:
+        description: 'Where can we find the helm chart?'
+        required: false
+        default: 'helm'
+        type: string
       kosli-pipeline:
         description: 'Name of the Kosli pipeline'
         required: true
@@ -116,6 +121,7 @@ jobs:
       image-name: ${{ inputs.image-name }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       docker-file-context: ${{ inputs.docker-file-context }}
+      helm-context: ${{ inputs.helm-context }}
     secrets:
       acr-username: ${{ secrets.acr-username }}
       acr-password: ${{ secrets.acr-password }}

@@ -22,6 +22,11 @@ on:
         type: string
         description: 'Name of the published image (with version)'
         required: true
+      helm-context:
+        description: 'Where can we find the helm chart?'
+        required: false
+        default: 'helm'
+        type: string
       kosli-environment:
         type: string
         required: false
@@ -123,7 +128,7 @@ jobs:
       - name: Init helm
         run: az acr helm repo add -n ${{ inputs.helm-repo }}
       - name: Package helm chart
-        run: helm package --version "${{ steps.meta.outputs.version }}" --app-version "${{ steps.meta.outputs.version}}" helm
+        run: helm package --version "${{ steps.meta.outputs.version }}" --app-version "${{ steps.meta.outputs.version}}" ${{ inputs.helm-context }}
       - name: Push helm chart
         run: |
           az acr helm push -n ${{ inputs.helm-repo}} ${{ inputs.image-name}}-*.tgz
