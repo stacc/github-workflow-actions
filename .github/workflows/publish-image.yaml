@@ -202,13 +202,13 @@ jobs:
       acr-password: ${{ secrets.acr-password }}
       snyk-token: ${{ secrets.snyk-token }}
   approval:
-    needs: [publish, pull-request, snyk, test]
-    if: inputs.auto-approve == 'true'
+    needs: [publish, pull-request, snyk]
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-approval.yaml@main
     with:
       name: ${{ needs.publish.outputs.name }}
       sha256: ${{ needs.publish.outputs.sha256 }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
+      latest-branch: ${{ inputs.latest-branch }}
     secrets:
       github-token: ${{ secrets.github-token }}
       kosli-token: ${{ secrets.kosli-token }}

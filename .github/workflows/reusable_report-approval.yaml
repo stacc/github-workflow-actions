@@ -20,6 +20,11 @@ on:
         type: string
         description: 'SHA256 of the published image'
         required: true
+      latest-branch:
+        description: 'Branch with last reported version. This gets pushed to by the workflow'
+        required: false
+        default: 'latest'
+        type: string
 
 jobs:
   pull-request:
