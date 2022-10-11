@@ -201,9 +201,10 @@ jobs:
       acr-username: ${{ secrets.acr-username }}
       acr-password: ${{ secrets.acr-password }}
       snyk-token: ${{ secrets.snyk-token }}
-  approval:
+  request-approval:
     needs: [publish, pull-request, snyk]
-    uses: stacc/github-workflow-actions/.github/workflows/reusable_report-approval.yaml@main
+    if: always()
+    uses: stacc/github-workflow-actions/.github/workflows/reusable_request-approval.yaml@main
     with:
       name: ${{ needs.publish.outputs.name }}
       sha256: ${{ needs.publish.outputs.sha256 }}

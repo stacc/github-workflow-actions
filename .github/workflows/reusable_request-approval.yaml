@@ -27,7 +27,7 @@ on:
         type: string
 
 jobs:
-  report-approval:
+  request-approval:
     runs-on: ubuntu-latest
     steps:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
@@ -43,4 +43,4 @@ jobs:
         run: |
           echo '${{ steps.get_release.outputs.author }}' | jq > approver.json
       - name: Report release approval to Kosli
-        run: kosli pipeline approval report ${{ inputs.name }} --description "Auto approval granted via Pull Request" --newest-commit ${{ github.sha }} --oldest-commit $(git rev-parse origin/${{inputs.latest-branch}}) --sha256 ${{ inputs.sha256 }} -u approver.json
+        run: kosli pipeline approval request ${{ inputs.name }} --description "Approval requested" --newest-commit ${{ github.sha }} --oldest-commit $(git rev-parse origin/${{inputs.latest-branch}}) --sha256 ${{ inputs.sha256 }} -u approver.json
