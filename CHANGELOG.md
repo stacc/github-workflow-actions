@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/stacc/github-workflow-actions/compare/v1.5.1...v1.5.2) (2022-10-17)
+
+
+### Bug Fixes
+
+* remove unusuable type choice. is valid in docs, though ([d4695f4](https://github.com/stacc/github-workflow-actions/commit/d4695f4ca30f80490190fe45532c3af6a1a590dc))
+
 ## [1.5.1](https://github.com/stacc/github-workflow-actions/compare/v1.5.0...v1.5.1) (2022-10-17)
 
 
