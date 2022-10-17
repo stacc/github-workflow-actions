@@ -129,7 +129,7 @@ jobs:
     with:
       name: ${{ needs.publish.outputs.name }}
       sha256: ${{ needs.publish.outputs.sha256 }}
-      commit: ${{ inputs.pull-request-commit || github.sha }}
+      pull-request-commit: ${{ inputs.pull-request-commit || github.sha }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
     secrets:
       github-token: ${{ secrets.github-token }}
