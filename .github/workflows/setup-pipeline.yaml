@@ -24,13 +24,13 @@ on:
         description: 'Kosli environment-type'
         required: false
         default: 'server'
-        type: choice
-        options:
-          - K8S
-          - ECS
-          - server
-          - S3
-          - lambda
+        type: string
+        #options:
+        #  - K8S
+        #  - ECS
+        #  - server
+        #  - S3
+        #  - lambda
 
 jobs:
   setup:
