@@ -43,10 +43,9 @@ jobs:
         run: |
           echo '${{ steps.get_release.outputs.author }}' | jq > approver.json
       - name: Setup oldest commit
-        id: oldest_commit
         run: |
-          echo '::set-output name=sha::$(git rev-parse origin/${{ inputs.latest-branch }})'
+          echo "oldest_commit=$(git rev-parse origin/${{ inputs.latest-branch }})" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v3
       - name: Report release approval to Kosli
-        run: kosli pipeline approval request --description "Approval requested" --newest-commit ${{ github.sha }} --oldest-commit ${{steps.oldest_commit.outputs.sha}} --sha256 ${{ inputs.sha256 }} -u approver.json
+        run: kosli pipeline approval request --description "Approval requested" --newest-commit ${{ github.sha }} --oldest-commit ${{env.oldest_commit}} --sha256 ${{ inputs.sha256 }} -u approver.json
