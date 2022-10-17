@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/stacc/github-workflow-actions/compare/v1.4.1...v1.4.2) (2022-10-17)
+
+
+### Bug Fixes
+
+* **request-approval:** checkout and remove the artifact name as it passes the sha ([6a16171](https://github.com/stacc/github-workflow-actions/commit/6a161719038b5254f831cdf1c3d6c7b8336fcb44))
+
 ## [1.4.1](https://github.com/stacc/github-workflow-actions/compare/v1.4.0...v1.4.1) (2022-10-10)
 
 
