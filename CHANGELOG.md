@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/stacc/github-workflow-actions/compare/v1.5.0...v1.5.1) (2022-10-17)
+
+
+### Bug Fixes
+
+* added commit for pull request to allow evidence in releases ([b0b1e5c](https://github.com/stacc/github-workflow-actions/commit/b0b1e5c5fe2ebb49372ff23fac0f8c59bb6e8734))
+
 # [1.5.0](https://github.com/stacc/github-workflow-actions/compare/v1.4.2...v1.5.0) (2022-10-17)
 
 
