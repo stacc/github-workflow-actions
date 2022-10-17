@@ -27,6 +27,10 @@ on:
         description: 'Image name without acr and version (e.g. "services-sms")'
         required: true
         type: string
+      pull-request-commit:
+        description: 'Use this if you want to override defaults and use a specific commit'
+        required: false
+        type: string
       helm-repo:
         description: 'Helm repo to publish to'
         required: false
@@ -119,6 +123,17 @@ jobs:
       helm-repo: ${{ inputs.helm-repo }}
       version: ${{ inputs.version }}
       image-name: ${{ inputs.image-name }}
+  pull-request:
+    needs: publish
+    uses: stacc/github-workflow-actions/.github/workflows/reusable_report-pull-request.yaml@main
+    with:
+      name: ${{ needs.publish.outputs.name }}
+      sha256: ${{ needs.publish.outputs.sha256 }}
+      commit: ${{ inputs.pull-request-commit || github.sha }}
+      kosli-pipeline: ${{ inputs.kosli-pipeline }}
+    secrets:
+      github-token: ${{ secrets.github-token }}
+      kosli-token: ${{ secrets.kosli-token }}
   test:
     needs: publish
     if: inputs.junit-artifact-name != ''
@@ -146,7 +161,7 @@ jobs:
       acr-password: ${{ secrets.acr-password }}
       snyk-token: ${{ secrets.snyk-token }}
   request-approval:
-    needs: [publish, snyk]
+    needs: [publish, pull-request, snyk]
     if: always()
     uses: stacc/github-workflow-actions/.github/workflows/reusable_request-approval.yaml@main
     with:
