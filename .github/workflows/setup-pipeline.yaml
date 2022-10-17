@@ -1,0 +1,46 @@
+name: Reusable workflow to setup Kosli pipeline and environment
+
+on:
+  workflow_call:
+    secrets:
+      kosli-token:
+        required: true
+    inputs:
+      pipeline:
+        description: 'Name of the Kosli pipeline'
+        required: true
+        type: string
+      template:
+        description: 'Kosli pipeline template'
+        required: false
+        default: 'pull-request,artifact,test,container-security-scan,code-security-scan'
+        type: string
+      environment-name:
+        description: 'Name of the Kosli environment'
+        required: false
+        default: 'stacc-acr-registry'
+        type: string
+      environment-type:
+        description: 'Kosli environment-type'
+        required: false
+        default: 'server'
+        type: choice
+        options:
+          - K8S
+          - ECS
+          - server
+          - S3
+          - lambda
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: stacc/github-workflow-actions/actions/setup-kosli@main
+        with:
+          kosli-pipeline: ${{ inputs.pipeline }}
+          kosli-token: ${{ secrets.kosli-token }}
+      - name: Declare Kosli pipeline
+        run: kosli pipeline declare --template ${{inputs.template}}
+      - name: Create environment in Kosli
+        run: kosli environment declare --name ${{ inputs.environment-name }} --environment-type ${{ inputs.environment-type }}

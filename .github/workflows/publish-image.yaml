@@ -46,21 +46,6 @@ on:
         description: 'Name of the Kosli pipeline'
         required: true
         type: string
-      kosli-declare:
-        description: 'Declare Kosli pipeline'
-        required: false
-        default: 'pull-request,artifact,test,container-security-scan,code-security-scan'
-        type: string
-      kosli-environment:
-        description: 'Name of the Kosli environment'
-        required: false
-        default: 'stacc-acr-registry'
-        type: string
-      kosli-environment-type:
-        description: 'Name of the Kosli environment-type'
-        required: false
-        default: 'server'
-        type: string
       junit-artifact-name:
         description: 'Name of artifact containing JUnit test results'
         required: false
@@ -107,38 +92,7 @@ on:
         description: "Outputs new name"
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Validate kosli-declare
-        run: |
-          echo "Validating ${{ inputs.kosli-declare }}"
-      - name: Cancel if no Pull Request or test
-        if: contains(inputs.kosli-declare, 'pull-request') == 'false'
-        run: |
-          ::debug::Kosli declare does not contain pull-request. This is required
-          ::set-failed
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Validate latest branch exists
-        run: |
-          (git show-branch ${{inputs.latest-branch}} &>/dev/null) && (git checkout ${{inputs.latest-branch}}) || (git checkout -b ${{inputs.latest-branch}})
-  initialize:
-    needs: validate
-    runs-on: ubuntu-latest
-    steps:
-      - uses: stacc/github-workflow-actions/actions/setup-kosli@main
-        with:
-          kosli-pipeline: ${{ inputs.kosli-pipeline }}
-          kosli-token: ${{ secrets.kosli-token }}
-      - name: Declare Kosli pipeline
-        run: kosli pipeline declare --template ${{inputs.kosli-declare}}
-      - name: Create environment in Kosli
-        run: kosli environment declare --name ${{ inputs.kosli-environment }} --environment-type ${{ inputs.kosli-environment-type }}
   publish:
-    needs: initialize
     uses: stacc/github-workflow-actions/.github/workflows/reusable_publish.yaml@main
     with:
       version: ${{ inputs.version }}
@@ -165,16 +119,6 @@ jobs:
       helm-repo: ${{ inputs.helm-repo }}
       version: ${{ inputs.version }}
       image-name: ${{ inputs.image-name }}
-  pull-request:
-    needs: publish
-    uses: stacc/github-workflow-actions/.github/workflows/reusable_report-pull-request.yaml@main
-    with:
-      name: ${{ needs.publish.outputs.name }}
-      sha256: ${{ needs.publish.outputs.sha256 }}
-      kosli-pipeline: ${{ inputs.kosli-pipeline }}
-    secrets:
-      github-token: ${{ secrets.github-token }}
-      kosli-token: ${{ secrets.kosli-token }}
   test:
     needs: publish
     if: inputs.junit-artifact-name != ''
@@ -202,7 +146,7 @@ jobs:
       acr-password: ${{ secrets.acr-password }}
       snyk-token: ${{ secrets.snyk-token }}
   request-approval:
-    needs: [publish, pull-request, snyk]
+    needs: [publish, snyk]
     if: always()
     uses: stacc/github-workflow-actions/.github/workflows/reusable_request-approval.yaml@main
     with:
