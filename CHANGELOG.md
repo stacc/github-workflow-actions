@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/stacc/github-workflow-actions/compare/v1.4.2...v1.5.0) (2022-10-17)
+
+
+### Features
+
+* move pull request out of publish image ([df35e55](https://github.com/stacc/github-workflow-actions/commit/df35e55cda684fb420337e6e1e166f7d32ecc5f3))
+
 ## [1.4.2](https://github.com/stacc/github-workflow-actions/compare/v1.4.1...v1.4.2) (2022-10-17)
 
 
