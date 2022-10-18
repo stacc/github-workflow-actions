@@ -34,14 +34,6 @@ jobs:
         with:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
           kosli-token: ${{ secrets.kosli-token }}
-      - name: Get release
-        id: get_release
-        uses: bruceadams/get-release@v1.2.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.github-token }}
-      - name: Store approver data
-        run: |
-          echo '${{ steps.get_release.outputs.author }}' | jq > approver.json
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -50,4 +42,4 @@ jobs:
         run: |
           echo "oldest_commit=$(git rev-parse origin/${{ inputs.latest-branch }})" >> $GITHUB_ENV
       - name: Report release approval to Kosli
-        run: kosli pipeline approval request --description "Approval requested" --newest-commit ${{ github.sha }} --oldest-commit ${{env.oldest_commit}} --sha256 ${{ inputs.sha256 }} -u approver.json
+        run: kosli pipeline approval request --description "Approval requested" --newest-commit ${{ github.sha }} --oldest-commit ${{env.oldest_commit}} --sha256 ${{ inputs.sha256 }}
