@@ -1,0 +1,32 @@
+name: Reusable workflow to declare an environment
+
+on:
+  workflow_call:
+    secrets:
+      kosli-token:
+        required: true
+    inputs:
+      name:
+        description: 'Name of the Environment'
+        required: true
+        type: string
+      description:
+        description: 'Description of the Environment'
+        required: true
+        type: string
+      environment-type:
+        description: '[K8S, ECS, server, S3, lambda]'
+        required: false
+        default: 'server'
+        type: string
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: stacc/github-workflow-actions/actions/setup-kosli@main
+        with:
+          kosli-token: ${{ secrets.kosli-token }}
+      - name: Report deployment to registry in Kosli
+        run: |
+          kosli environment declare --name ${{ inputs.name }} --environment-type ${{ inputs.environment-type }} --description ${{ inputs.description }}
