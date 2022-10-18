@@ -160,15 +160,15 @@ jobs:
       acr-username: ${{ secrets.acr-username }}
       acr-password: ${{ secrets.acr-password }}
       snyk-token: ${{ secrets.snyk-token }}
-  request-approval:
-    needs: [publish, pull-request, snyk]
-    if: always()
-    uses: stacc/github-workflow-actions/.github/workflows/reusable_request-approval.yaml@main
-    with:
-      name: ${{ needs.publish.outputs.name }}
-      sha256: ${{ needs.publish.outputs.sha256 }}
-      kosli-pipeline: ${{ inputs.kosli-pipeline }}
-      latest-branch: ${{ inputs.latest-branch }}
-    secrets:
-      github-token: ${{ secrets.github-token }}
-      kosli-token: ${{ secrets.kosli-token }}
+#  request-approval:
+#    needs: [publish, pull-request, snyk]
+#    if: always()
+#    uses: stacc/github-workflow-actions/.github/workflows/reusable_request-approval.yaml@main
+#    with:
+#      name: ${{ needs.publish.outputs.name }}
+#      sha256: ${{ needs.publish.outputs.sha256 }}
+#      kosli-pipeline: ${{ inputs.kosli-pipeline }}
+#      latest-branch: ${{ inputs.latest-branch }}
+#    secrets:
+#      github-token: ${{ secrets.github-token }}
+#      kosli-token: ${{ secrets.kosli-token }}
