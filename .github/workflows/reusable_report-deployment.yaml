@@ -5,6 +5,10 @@ on:
     secrets:
       kosli-token:
         required: true
+      acr-username:
+        required: true
+      acr-password:
+        required: true
     inputs:
       pipeline:
         description: 'Name of the Kosli pipeline'
@@ -14,10 +18,20 @@ on:
         description: 'Name of the Kosli environment'
         required: true
         type: string
-      sha256:
+      artifact:
         type: string
-        description: 'SHA256 of the published image'
+        description: 'Name of the published image'
         required: true
+      acr-server:
+        description: 'Name of the registry provider'
+        required: false
+        default: "stacc.azurecr.io"
+        type: string
+      description:
+        description: 'Description of the deployment'
+        required: false
+        default: "Deployment"
+        type: string
 
 jobs:
   pull-request:
@@ -28,4 +42,5 @@ jobs:
           kosli-pipeline: ${{ inputs.pipeline }}
           kosli-token: ${{ secrets.kosli-token }}
       - name: Report deployment to registry in Kosli
-        run: kosli pipeline deployment report --sha256 ${{ inputs.sha256 }} -e ${{ inputs.environment }} -p ${{ inputs.pipeline }}
+        run: |
+          kosli pipeline deployment report ${{ inputs.artifact }} -d ${{ description }} -e ${{ inputs.environment }} --registry-provider ${{ inputs.acr-server }} --registry-username ${{ secrets.acr-username }} --registry-password ${{ secrets.acr-password }}
