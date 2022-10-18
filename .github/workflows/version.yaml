@@ -34,6 +34,7 @@ on:
           on "published" might not have correct ref to evaluate PRs'
         required: false
         type: boolean
+        default: false
       slack-channel: #Slack channel. Look ABOVE this to read how this might work https://github.com/juliuscc/semantic-release-slack-bot#slack-access-tokenchannel-usage
         description: 'Slack channel'
         required: false
