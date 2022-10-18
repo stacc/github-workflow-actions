@@ -3,15 +3,9 @@ name: Reusable workflow to provide evidence of a deployment
 on:
   workflow_call:
     secrets:
-      github-token:
-        required: true
       kosli-token:
         required: true
     inputs:
-      name:
-        description: 'Name of the artifact'
-        required: true
-        type: string
       pipeline:
         description: 'Name of the Kosli pipeline'
         required: true
@@ -34,4 +28,4 @@ jobs:
           kosli-pipeline: ${{ inputs.pipeline }}
           kosli-token: ${{ secrets.kosli-token }}
       - name: Report deployment to registry in Kosli
-        run: kosli pipeline deployment report ${{ inputs.name }} --sha256 ${{ inputs.sha256 }} -e ${{ inputs.environment }} -p ${{ inputs.pipeline }}
+        run: kosli pipeline deployment report --sha256 ${{ inputs.sha256 }} -e ${{ inputs.environment }} -p ${{ inputs.pipeline }}
