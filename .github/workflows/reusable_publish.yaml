@@ -43,6 +43,9 @@ on:
         type: string
         required: false
         default: '.'
+      artifact-download-path:
+        type: string
+        required: false
     outputs:
       version:
         value: ${{ jobs.publish.outputs.version }}
@@ -96,6 +99,12 @@ jobs:
           login-server: ${{ inputs.acr-server }}
           username: ${{ secrets.acr-username }}
           password: ${{ secrets.acr-password }}
+      - name: Download optional files
+        if: inputs.artifact-download-path != ''
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact-download-path }}
+          path: .
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v3

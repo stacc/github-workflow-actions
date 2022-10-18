@@ -54,6 +54,10 @@ on:
         description: 'Name of artifact containing JUnit test results'
         required: false
         type: string
+      artifact-download-path:
+        description: 'Path to download additional artifact for build process. Will be placed on root (tbd)'
+        required: false
+        type: string
       snyk-org:
         description: 'Snyk organization. NOTE: Snyk calls a "team" an organization'
         required: true
@@ -103,6 +107,7 @@ jobs:
       image-name: ${{ inputs.image-name }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       docker-file-context: ${{ inputs.docker-file-context }}
+      artifact-download-path: ${{ inputs.artifact-download-path }}
     secrets:
       acr-username: ${{ secrets.acr-username }}
       acr-password: ${{ secrets.acr-password }}
