@@ -43,4 +43,4 @@ jobs:
           kosli-token: ${{ secrets.kosli-token }}
       - name: Report deployment to registry in Kosli
         run: |
-          kosli pipeline deployment report ${{ inputs.artifact }} -d ${{ description }} -e ${{ inputs.environment }} --registry-provider ${{ inputs.acr-server }} --registry-username ${{ secrets.acr-username }} --registry-password ${{ secrets.acr-password }}
+          kosli pipeline deployment report ${{ inputs.artifact }} -d ${{ inputs.description }} -e ${{ inputs.environment }} --registry-provider ${{ inputs.acr-server }} --registry-username ${{ secrets.acr-username }} --registry-password ${{ secrets.acr-password }}
