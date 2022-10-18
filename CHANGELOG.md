@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/stacc/github-workflow-actions/compare/v1.5.2...v1.5.3) (2022-10-18)
+
+
+### Bug Fixes
+
+* move checkout above git command 🙈 ([6f00ebe](https://github.com/stacc/github-workflow-actions/commit/6f00ebe602de22d06838c816b56802acf4a8685b))
+
 ## [1.5.2](https://github.com/stacc/github-workflow-actions/compare/v1.5.1...v1.5.2) (2022-10-17)
 
 
