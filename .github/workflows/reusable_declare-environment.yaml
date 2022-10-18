@@ -21,7 +21,7 @@ on:
         type: string
 
 jobs:
-  pull-request:
+  declare:
     runs-on: ubuntu-latest
     steps:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
@@ -29,4 +29,4 @@ jobs:
           kosli-token: ${{ secrets.kosli-token }}
       - name: Report deployment to registry in Kosli
         run: |
-          kosli environment declare --name ${{ inputs.name }} --environment-type ${{ inputs.environment-type }} --description ${{ inputs.description }}
+          kosli environment declare --name ${{ inputs.name }} --environment-type ${{ inputs.environment-type }} --description "${{ inputs.description }}"
