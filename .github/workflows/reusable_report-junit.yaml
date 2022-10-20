@@ -36,4 +36,4 @@ jobs:
           name: ${{ inputs.junit-artifact-name }}
           path: data/junit
       - name: Report JUnit test results to Kosli
-        run: kosli pipeline artifact report evidence test ${{ inputs.name }} -d "JUnit Results" -e test --sha256 ${{ inputs.sha256 }}
+        run: kosli pipeline artifact report evidence test ${{ inputs.name }} -d "JUnit Results" -e test --sha256 ${{ inputs.sha256 }} --results-dir data/junit/
