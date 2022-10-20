@@ -37,7 +37,7 @@ on:
       snyk-working-directory:
         type: string
         required: false
-        default: '.'
+        default: './'
 
 jobs:
   snyk:
@@ -56,6 +56,8 @@ jobs:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
           kosli-token: ${{ secrets.kosli-token }}
       - uses: snyk/actions/setup@master
+        with:
+          snyk-version: v1.1035.0
       - name: Authenticate to Snyk
         run: snyk auth ${{ secrets.snyk-token }}
       - name: Snyk dependencys test
