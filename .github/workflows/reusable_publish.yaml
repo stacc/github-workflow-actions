@@ -85,7 +85,9 @@ jobs:
       - uses: docker/metadata-action@v4
         id: meta
         with:
-          tags: type=semver,pattern={{version}},value=${{inputs.version}}
+          tags: | 
+            type=semver,pattern={{version}},value=${{inputs.version}}
+            type=sha
           images: ${{ inputs.acr-server}}/${{ inputs.image-name }}
       - name: JFrog Login (needed for Flow builder)
         uses: azure/docker-login@v1
