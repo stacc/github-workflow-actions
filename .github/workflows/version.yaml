@@ -94,9 +94,9 @@ jobs:
       # If you need to build before publishing, you can use the prepublishOnly reserved script
       # Todo: figure out how to choose
       - name: Shell
-        if: ${{ pre-release-bash-script != '' }}
+        if: ${{ inputs.pre-release-bash-script != '' }}
         run: |
-            ${{ pre-release-bash-script }}
+            ${{ inputs.pre-release-bash-script }}
       - uses: cycjimmy/semantic-release-action@v3
         id: semantic
         with:
