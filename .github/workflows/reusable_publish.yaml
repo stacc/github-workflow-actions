@@ -87,7 +87,7 @@ jobs:
         with:
           tags: | 
             type=semver,pattern={{version}},value=${{inputs.version}}
-            type=sha
+            type=sha,format=long
           images: ${{ inputs.acr-server}}/${{ inputs.image-name }}
       - name: JFrog Login (needed for Flow builder)
         uses: azure/docker-login@v1
