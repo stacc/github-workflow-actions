@@ -60,7 +60,7 @@ jobs:
           snyk-version: v1.1035.0
       - name: Authenticate to Snyk
         run: snyk auth ${{ secrets.snyk-token }}
-      - name: Snyk dependencys test
+      - name: Snyk dependencies test
         run: snyk test --fail-on=upgradable --prune-repeated-subdependencies --json-file-output=snyk-report.json --org=${{ inputs.snyk-org }} ${{ inputs.snyk-test-additional-params }}
       - name: Convert to single root json
         run: |
