@@ -47,7 +47,9 @@ jobs:
       - name: Init helm
         run: az acr helm repo add -n ${{ inputs.helm-repo }}
       - name: Package helm chart
-        run: helm package --version "${{ inputs.version }}" --app-version "${{ inputs.version}}" ${{ inputs.context }}
+        run: |
+          export VERSION=${{ inputs.version }}
+          helm package --version "${VERSION#v}" --app-version "${VERSION#v}" ${{ inputs.context }}
       - name: Push helm chart
         run: |
           az acr helm push -n ${{ inputs.helm-repo}} ${{ inputs.image-name}}-*.tgz
