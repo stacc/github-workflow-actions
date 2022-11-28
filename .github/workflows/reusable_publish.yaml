@@ -73,7 +73,7 @@ jobs:
       - name: Set pipeline
         id: set-pipeline
         run: |
-          echo "::set-output name=pipeline::${{ inputs.kosli-pipeline || inputs.image-name }}"
+          echo "pipeline=${{ inputs.kosli-pipeline || inputs.image-name }}" >> $GITHUB_OUTPUT
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -124,9 +124,9 @@ jobs:
         run: |
           ARTIFACT_SHA=$( echo ${{ steps.docker_build.outputs.digest }} | sed 's/.*://')
           echo "DIGEST=$ARTIFACT_SHA" >> ${GITHUB_ENV}
-          echo ::set-output name=image-digest::${ARTIFACT_SHA}
-          echo ::set-output name=image::${{ inputs.acr-server }}/${{ inputs.image-name }}:${{ steps.meta.outputs.version }}
-          echo ::set-output name=name::${{ inputs.acr-server }}/${{ inputs.image-name }}
+          echo "image-digest=${ARTIFACT_SHA}" >> $GITHUB_OUTPUT
+          echo "image=${{ inputs.acr-server }}/${{ inputs.image-name }}:${{ steps.meta.outputs.version }}" >> $GITHUB_OUTPUT
+          echo "name=${{ inputs.acr-server }}/${{ inputs.image-name }}" >> $GITHUB_OUTPUT
       - name: Report Docker image in Kosli
         run: |
           kosli pipeline artifact report creation ${{ steps.digest-prep.outputs.name }} --sha256 ${{ env.DIGEST }}
