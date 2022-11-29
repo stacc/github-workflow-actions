@@ -82,6 +82,10 @@ on:
         required: false
         default: '.'
         type: string
+      docker-file:
+        description: 'Path to the Dockerfile. Default {docker-file-context}/Dockerfile'
+        type: string
+        required: false
     outputs:
       version:
         value: ${{ jobs.publish.outputs.version }}
@@ -107,6 +111,7 @@ jobs:
       image-name: ${{ inputs.image-name }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       docker-file-context: ${{ inputs.docker-file-context }}
+      docker-file: ${{ inputs.docker-file }}
       artifact-download-path: ${{ inputs.artifact-download-path }}
     secrets:
       acr-username: ${{ secrets.acr-username }}
