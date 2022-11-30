@@ -15,6 +15,11 @@ on:
         description: 'Name of the artifact'
         required: true
         type: string
+      dry-run:
+        type: boolean
+        description: 'A dry run will not report results to Kosli. Meant to be used on Pull Requests'
+        required: false
+        default: false
       sha256:
         type: string
         required: true
@@ -52,6 +57,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
+        if: ${{ !inputs.dry-run }}
         with:
           kosli-pipeline: ${{ inputs.kosli-pipeline }}
           kosli-token: ${{ secrets.kosli-token }}
@@ -63,9 +69,11 @@ jobs:
       - name: Snyk dependencies test
         run: snyk test --fail-on=upgradable --prune-repeated-subdependencies --json-file-output=snyk-report.json --org=${{ inputs.snyk-org }} ${{ inputs.snyk-test-additional-params }}
       - name: Convert to single root json
+        if: ${{ !inputs.dry-run }}
         run: |
           jq '{"root": .}' <<< cat snyk-report.json >> results.json
       - name: Report Snyk results to Kosli
+        if: ${{ !inputs.dry-run }}
         run: kosli pipeline artifact report evidence generic ${{ inputs.name }} -e container-security-scan --sha256 ${{ inputs.sha256 }} -u results.json
       - name: Login to ACR
         uses: azure/docker-login@v1
@@ -76,4 +84,5 @@ jobs:
       - name: Snyk container test
         run: snyk container test ${{ inputs.name }} --fail-on=upgradable --json-file-output=snyk-container-report.json --org=${{ inputs.snyk-org }}
       - name: Report Snyk results to Kosli
+        if: ${{ !inputs.dry-run }}
         run: kosli pipeline artifact report evidence generic ${{ inputs.name }} -e code-security-scan --sha256 ${{ inputs.sha256 }} -u snyk-container-report.json
