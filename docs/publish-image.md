@@ -47,6 +47,8 @@ Secrets are inherited. Stacc Org secrets are used by default.
 | image                       | image name like 'services-someservice'         |                                                                       | yes      |
 | container-registry-host     | registry host                                  | stacc.azurecr.io                                                      | no       |
 | helm-repo                   | home of the helm charts                        | stacc                                                                 | no       |
+| docker-file-context         | Context for docker build                       | .                                                                     | no       |
+| docker-file                 | Path to the Dockerfile                         | ${{ docker-file-context }}/Dockerfile                                 | no       |
 | kosli-declare               | what types of evidence should we collect       | pull-request,artifact,test,container-security-scan,code-security-scan | no       |
 | kosli-pipeline              | Name of the Kosli pipeline                     | ${{inputs.image}}                                                     | no       |
 | kosli-owner                 | Name of the Kosli owner                        | stacc                                                                 | no       |

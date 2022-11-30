@@ -43,6 +43,9 @@ on:
         type: string
         required: false
         default: '.'
+      docker-file:
+        type: string
+        required: false
       artifact-download-path:
         type: string
         required: false
@@ -115,6 +118,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.docker-file-context }}
+          file: ${{inputs.docker-file}}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
