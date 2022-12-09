@@ -41,5 +41,30 @@ jobs:
       - name: Setup oldest commit
         run: |
           echo "oldest_commit=$(git rev-parse origin/${{ inputs.latest-branch }})" >> $GITHUB_ENV
+      - name: Get approver
+        run: |
+          REPOSITORY="${{ github.repository }}"
+
+          gh api /repos/$REPOSITORY/pulls?state=closed | jq -e -r '.[] | select(.merge_commit_sha == "${{ github.sha }}")' > pr.json
+
+          if [ $? != 0 ]
+          then
+            echo "No closed Pull Requests"
+            exit 1
+          fi
+
+
+          LAST_PR_COMMIT="$(jq -r '.head.sha' pr.json)"
+          PR_NUMBER="$(jq -r '.number' pr.json)"
+
+          gh api /repos/$REPOSITORY/pulls/$PR_NUMBER/reviews | jq -e -r '.[] | select(.commit_id == "$LAST_PR_COMMIT" and .state == "APPROVED")' > review.json
+
+          if [ $? != 0 ]
+          then
+            echo "No reviews have approved the last commit in Pull Request"
+            exit 1
+          fi
+
+          echo "approver=$(jq -r '.user.login')" >> $GITHUB_ENV
       - name: Report release approval to Kosli
-        run: kosli pipeline approval report --description "Auto approval granted via Pull Request" --newest-commit ${{ github.sha }} --oldest-commit ${{ env.oldest_commit }} --sha256 ${{ inputs.sha256 }} -u approver.json
+        run: kosli pipeline approval report --description "Approval granted via Pull Request by user ${{ env.approver }}" --newest-commit ${{ github.sha }} --oldest-commit ${{ env.oldest_commit }} --sha256 ${{ inputs.sha256 }}
