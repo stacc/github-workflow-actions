@@ -55,7 +55,7 @@ jobs:
 
           gh api /repos/$REPOSITORY/pulls?state=closed | jq -e -r '.[] | select(.merge_commit_sha == "${{ github.sha }}")' > pr.json
 
-          if [ $? != 0 ]
+          if [ $? -ne 0 ]
           then
             echo "No closed Pull Requests"
             exit 1
@@ -67,7 +67,7 @@ jobs:
 
           gh api /repos/$REPOSITORY/pulls/$PR_NUMBER/reviews | jq -e -r '.[] | select(.commit_id == "$LAST_PR_COMMIT" and .state == "APPROVED")' > review.json
 
-          if [ $? != 0 ]
+          if [ $? -ne 0 ]
           then
             echo "No reviews have approved the last commit in Pull Request"
             exit 1
