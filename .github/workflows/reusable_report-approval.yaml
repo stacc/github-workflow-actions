@@ -34,8 +34,6 @@ on:
 jobs:
   report-approval:
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.github-token }}
     steps:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
         if: ${{ !inputs.dry-run }}
@@ -50,6 +48,8 @@ jobs:
         run: |
           echo "oldest_commit=$(git rev-parse origin/${{ inputs.latest-branch }})" >> $GITHUB_ENV
       - name: Get approver
+        env:
+          GH_TOKEN: ${{ secrets.github-token }}
         run: |
           REPOSITORY="${{ github.repository }}"
 
