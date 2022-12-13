@@ -142,21 +142,21 @@ jobs:
       - uses: sigstore/cosign-installer@536b37ec5d5b543420bdfd9b744c5965bd4d8730 # tag=v2.3.0
       - name: Sign the images
         if: ${inputs.enable-container-signing}
+        env:
+          TAGS: ${{ steps.digest-prep.outputs.image }}
+          COSIGN_EXPERIMENTAL: 1
         run: |
           cosign sign
             -a "repo=${{ github.repository }}" \
             -a "workflow=${{ github.workflow }}" \
             -a "ref=${{ github.sha }}" \
             ${TAGS}
-        env:
-          TAGS: ${{ steps.digest-prep.outputs.image }}
-          COSIGN_EXPERIMENTAL: 1
       - name: Verify the pushed tags
         if: ${inputs.enable-container-signing}
-        run: cosign verify ${TAGS}
         env:
           TAGS: ${{ steps.digest-prep.outputs.image }}
           COSIGN_EXPERIMENTAL: 1
+        run: cosign verify ${TAGS}
     outputs:
       version: ${{ steps.meta.outputs.version }}
       digest: ${{ steps.docker_build.outputs.digest }}
