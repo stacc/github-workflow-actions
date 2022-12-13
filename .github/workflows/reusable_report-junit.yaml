@@ -23,7 +23,7 @@ on:
         description: 'SHA256 of the published image'
         required: true
 jobs:
-  pull-request:
+  j-unit:
     runs-on: ubuntu-latest
     steps:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
