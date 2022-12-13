@@ -45,7 +45,7 @@ on:
         default: './'
 
 jobs:
-  snyk:
+  report-snyk:
     defaults:
       run:
         shell: bash

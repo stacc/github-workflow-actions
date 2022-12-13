@@ -25,7 +25,7 @@ on:
         required: false
         type: string
 jobs:
-  pull-request:
+  report-pull-request:
     runs-on: ubuntu-latest
     steps:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
