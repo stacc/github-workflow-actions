@@ -159,7 +159,7 @@ jobs:
     needs: publish
     uses: stacc/github-workflow-actions/.github/workflows/reusable_report-snyk.yaml@main
     with:
-      name: ${{ needs.publish.outputs.name }}
+      name: ${{ needs.publish.outputs.image }}
       sha256: ${{ needs.publish.outputs.sha256 }}
       kosli-pipeline: ${{ inputs.kosli-pipeline }}
       snyk-org: ${{ inputs.snyk-org }}

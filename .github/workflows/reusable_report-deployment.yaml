@@ -39,7 +39,7 @@ on:
         type: string
 
 jobs:
-  pull-request:
+  report-deployment:
     runs-on: ubuntu-latest
     steps:
       - uses: stacc/github-workflow-actions/actions/setup-kosli@main
